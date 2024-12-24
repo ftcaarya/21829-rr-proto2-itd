@@ -15,9 +15,9 @@ public class PIDSecondPrototype extends OpMode {
     public PIDController vertController;
     public PIDController linkageController;
 
-    public static double pv = 0.0, iv = 0.0, dv = 0.0;
+    public static double pv = 0.006, iv = 0.0, dv = 0.0007;
     public static double pl = 0.006, il = 0.0, dl = 0.0009;
-    public static double fv = 0.0, fl = 0.07;
+    public static double fv = 0.175, fl = 0.07;
 
     public static int vertTarget;
     public static int linkTarget;
@@ -61,6 +61,11 @@ public class PIDSecondPrototype extends OpMode {
 
         elevator.setPower(vertPower);
         linkage.setPower(linkPower);
+
+        telemetry.addData("Elevator currnet position", vertPos);
+        telemetry.addData("Elevator target position", vertTarget);
+        telemetry.addData("Linkage current position", linkagePos);
+        telemetry.addData("Linkage target position", linkTarget);
 
         telemetry.update();
 

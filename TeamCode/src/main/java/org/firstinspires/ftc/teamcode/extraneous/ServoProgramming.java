@@ -26,6 +26,4 @@ public class ServoProgramming {
         claw = hardwareMap.get(Servo.class, "claw servo");
     }
 
-
-
 }

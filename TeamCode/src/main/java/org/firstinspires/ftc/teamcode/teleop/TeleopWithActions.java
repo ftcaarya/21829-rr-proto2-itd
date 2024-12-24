@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.extraneous.AllMech;
+import org.firstinspires.ftc.teamcode.extraneous.ServoProgramming;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @TeleOp(name = "Teleop avec l'actions trois", group = "Examples")
 public class TeleopWithActions extends OpMode {
     AllMech robot;
+    ServoProgramming servo;
 
     private FtcDashboard dash = FtcDashboard.getInstance();
     private List<Action> runningActions = new ArrayList<>();
@@ -23,7 +25,7 @@ public class TeleopWithActions extends OpMode {
     @Override
     public void init() {
         robot = new AllMech(hardwareMap);
-
+        servo = new ServoProgramming(hardwareMap);
     }
 
     @Override

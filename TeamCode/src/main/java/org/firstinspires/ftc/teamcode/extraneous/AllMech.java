@@ -18,12 +18,15 @@ public class AllMech extends LinearOpMode {
     public static DcMotor linkage, elevator;
 
     PIDController linkageController;
+    PIDController vertController;
 
-    public static double pv = 0.0, iv = 0.0, dv = 0.0;
+    public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
     public static double pl = 0.006, il = 0.0, dl = 0.0009;
-    public static double fv = 0.0, fl = 0.07;
+    public static double fv = 0.175, fl = 0.07;
 
     public volatile int linkTarget = 0;
+    public static int vertTarget;
+
 
     private final double ticks_in_degree = 576.7/180;
 
@@ -38,6 +41,7 @@ public class AllMech extends LinearOpMode {
         elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         linkageController = new PIDController(pl, il, dl);
+        vertController = new PIDController(pv, iv, dv);
 
         //Drive motor inits
         frontLeft = hardwareMap.get(DcMotor.class, "left front motor");
@@ -52,6 +56,10 @@ public class AllMech extends LinearOpMode {
 
     public Action setLinkageTarget(int target) {
         return new InstantAction(() -> linkTarget = target);
+    }
+
+    public Action setElevatorTarget(int target) {
+        return new InstantAction(() -> vertTarget = target);
     }
 
     public class UpdateLinkPID implements Action {
@@ -77,6 +85,28 @@ public class AllMech extends LinearOpMode {
     }
     public Action updateLinkPID(){
         return new UpdateLinkPID();
+    }
+
+    public class UpdateVertPID implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            vertController.setPID(pv, iv, dv);
+
+            int vertPos = elevator.getCurrentPosition();
+
+            double vertPID = vertController.calculate(vertPos, vertTarget);
+
+            double vertFF = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * fv;
+
+            double vertPower = vertPID + vertFF;
+
+            elevator.setPower(vertPower);
+
+            return true;
+        }
+    }
+    public Action updateVertPID() {
+        return new UpdateVertPID();
     }
 
 

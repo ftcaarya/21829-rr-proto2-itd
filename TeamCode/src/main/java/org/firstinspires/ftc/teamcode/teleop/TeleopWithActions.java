@@ -1,0 +1,139 @@
+package org.firstinspires.ftc.teamcode.teleop;
+
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.extraneous.AllMech;
+import org.firstinspires.ftc.teamcode.extraneous.ServoProgramming;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@TeleOp(name = "Teleop avec l'actions trois", group = "Examples")
+public class TeleopWithActions extends OpMode {
+    AllMech robot;
+    ServoProgramming servo;
+
+    private FtcDashboard dash = FtcDashboard.getInstance();
+    private List<Action> runningActions = new ArrayList<>();
+
+    @Override
+    public void init() {
+        robot = new AllMech(hardwareMap);
+        servo = new ServoProgramming(hardwareMap);
+    }
+
+    @Override
+    public void loop() {
+        TelemetryPacket packet = new TelemetryPacket();
+
+        // update based on gamepads.
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x;
+        double rx = gamepad1.right_stick_x;
+
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
+
+
+        robot.frontLeft.setPower(frontLeftPower);
+        robot.rearLeft.setPower(backLeftPower);
+        robot.frontRight.setPower(frontRightPower);
+        robot.rearRight.setPower(backRightPower);
+
+        if (gamepad1.dpad_up) {
+            runningActions.add(
+              new ParallelAction(
+                      robot.updateVertPID(),
+                      robot.setElevatorTarget(2500)
+              )
+            );
+        }
+
+        if (gamepad1.dpad_down) {
+            runningActions.add(
+                    new ParallelAction(
+                            robot.updateVertPID(),
+                            robot.setElevatorTarget(-20)
+                    )
+            );
+        }
+
+        if (gamepad1.dpad_left) {
+            runningActions.add(
+                new ParallelAction(
+                        robot.updateLinkPID(),
+                        robot.setLinkageTarget(1100)
+                )
+            );
+        }
+
+        if (gamepad1.dpad_right) {
+            runningActions.add(
+                    new ParallelAction(
+                            robot.updateLinkPID(),
+                            robot.setLinkageTarget(100)
+                    )
+            );
+        }
+
+        if (gamepad1.a) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
+                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN))
+                    )
+            );
+        }
+
+        if (gamepad1.y) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
+                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
+                    )
+            );
+        }
+
+        if (gamepad1.right_bumper) {
+            runningActions.add(
+                    new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE))
+            );
+        }
+
+        if (gamepad1.left_bumper) {
+            runningActions.add(
+                    new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN))
+            );
+        }
+
+
+
+        List<Action> newActions = new ArrayList<>();
+        for (Action action : runningActions) {
+            action.preview(packet.fieldOverlay());
+            if (action.run(packet)) {
+                newActions.add(action);
+            }
+        }
+        runningActions = newActions;
+
+        dash.sendTelemetryPacket(packet);
+    }
+}

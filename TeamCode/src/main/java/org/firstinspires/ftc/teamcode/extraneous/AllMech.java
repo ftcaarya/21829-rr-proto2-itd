@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,20 +16,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AllMech extends LinearOpMode {
 
     public DcMotor frontLeft, frontRight, rearRight, rearLeft;
+    public Servo arm, wrist, rotate, claw, leftArm;
     public static DcMotor linkage, elevator;
 
     PIDController linkageController;
     PIDController vertController;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
-    public static double pl = 0.006, il = 0.0, dl = 0.0009;
-    public static double fv = 0.175, fl = 0.07;
+    public static double pl = 0.014, il = 0.0, dl = 0.001;
+    public static double fv = 0.175, fl = 0.15;
 
     public volatile int linkTarget = 0;
     public static int vertTarget;
 
 
     private final double ticks_in_degree = 576.7/180;
+
 
     public AllMech(HardwareMap hardwareMap) {
         linkage = hardwareMap.get(DcMotor.class, "linkage");
@@ -43,15 +46,30 @@ public class AllMech extends LinearOpMode {
         linkageController = new PIDController(pl, il, dl);
         vertController = new PIDController(pv, iv, dv);
 
+        arm = hardwareMap.get(Servo.class, "arm servo");
+        leftArm = hardwareMap.get(Servo.class, "left arm servo");
+        wrist = hardwareMap.get(Servo.class, "wrist servo");
+        rotate = hardwareMap.get(Servo.class, "rotate servo");
+        claw = hardwareMap.get(Servo.class, "claw servo");
+
         //Drive motor inits
-        frontLeft = hardwareMap.get(DcMotor.class, "left front motor");
-        frontRight = hardwareMap.get(DcMotor.class, "right front motor");
-        rearRight = hardwareMap.get(DcMotor.class, "right rear motor");
-        rearLeft = hardwareMap.get(DcMotor.class, "left rear motor");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "left front motor");
+        frontRight = hardwareMap.get(DcMotorEx.class, "right front motor");
+        rearRight = hardwareMap.get(DcMotorEx.class, "right rear motor");
+        rearLeft = hardwareMap.get(DcMotorEx.class, "left rear motor");
+
+
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         rearLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
     }
 
     public Action setLinkageTarget(int target) {
@@ -108,6 +126,9 @@ public class AllMech extends LinearOpMode {
     public Action updateVertPID() {
         return new UpdateVertPID();
     }
+
+
+
 
 
     @Override

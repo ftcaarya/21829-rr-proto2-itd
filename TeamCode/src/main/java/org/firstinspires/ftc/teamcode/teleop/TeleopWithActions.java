@@ -4,6 +4,12 @@ import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SER
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_UP;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_LEFT_HALF;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_PERP;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_RESET;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_RIGHT_HALF;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
 
@@ -46,10 +52,10 @@ public class TeleopWithActions extends OpMode {
         double rx = gamepad1.right_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x + rx) / denominator;
+        double frontLeftPower = (y + x - rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
+        double backRightPower = (y + x + rx) / denominator;
 
 
         robot.frontLeft.setPower(frontLeftPower);
@@ -57,7 +63,38 @@ public class TeleopWithActions extends OpMode {
         robot.frontRight.setPower(frontRightPower);
         robot.rearRight.setPower(backRightPower);
 
-        if (gamepad1.dpad_up) {
+
+
+        if (gamepad2.x){
+        runningActions.add(
+                new ParallelAction(
+                        new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_LEFT_HALF))
+                )
+        );
+        }
+
+        if (gamepad2.b){
+            runningActions.add(
+                    new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_RIGHT_HALF))
+
+            );
+        }
+
+        if (gamepad2.right_stick_button){
+            runningActions.add(
+                    new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_RESET))
+
+            );
+        }
+        if (gamepad2.left_stick_button){
+            runningActions.add(
+                    new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_PERP))
+
+            );
+        }
+
+
+        if (gamepad2.dpad_up) {
             runningActions.add(
               new ParallelAction(
                       robot.updateVertPID(),
@@ -66,7 +103,10 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (gamepad1.dpad_down) {
+
+
+
+        if (gamepad2.dpad_down) {
             runningActions.add(
                     new ParallelAction(
                             robot.updateVertPID(),
@@ -75,53 +115,58 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (gamepad1.dpad_left) {
+        if (gamepad2.dpad_left) {
             runningActions.add(
                 new ParallelAction(
                         robot.updateLinkPID(),
-                        robot.setLinkageTarget(1100)
+                        robot.setLinkageTarget(500)
                 )
             );
         }
 
-        if (gamepad1.dpad_right) {
+        if (gamepad2.dpad_right) {
             runningActions.add(
                     new ParallelAction(
                             robot.updateLinkPID(),
-                            robot.setLinkageTarget(100)
+                            robot.setLinkageTarget(0)
                     )
             );
         }
 
-        if (gamepad1.a) {
+        if (gamepad2.a) {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
+                            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
                             new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN))
                     )
             );
         }
 
-        if (gamepad1.y) {
+
+
+        if (gamepad2.y) {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
+                            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_UP)),
                             new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
                     )
             );
         }
 
-        if (gamepad1.right_bumper) {
+        if (gamepad2.right_bumper) {
             runningActions.add(
                     new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE))
             );
         }
 
-        if (gamepad1.left_bumper) {
+        if (gamepad2.left_bumper) {
             runningActions.add(
                     new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN))
             );
         }
+
 
 
 

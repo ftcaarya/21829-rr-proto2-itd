@@ -16,8 +16,8 @@ public class PIDSecondPrototype extends OpMode {
     public PIDController linkageController;
 
     public static double pv = 0.006, iv = 0.0, dv = 0.0007;
-    public static double pl = 0.006, il = 0.0, dl = 0.0009;
-    public static double fv = 0.175, fl = 0.07;
+    public static double pl = 0.008, il = 0.0, dl = 0.001;
+    public static double fv = 0.175, fl = 0.12;
 
     public static int vertTarget;
     public static int linkTarget;

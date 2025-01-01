@@ -20,6 +20,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.extraneous.AllMech;
@@ -32,18 +33,46 @@ import java.util.List;
 public class TeleopWithActions extends OpMode {
     AllMech robot;
     ServoProgramming servo;
+    Gamepad currentGamepad1;
+    Gamepad currentGamepad2;
 
-    private FtcDashboard dash = FtcDashboard.getInstance();
+    Gamepad previousGamepad1;
+    Gamepad previousGamepad2;
+
+
+    private final FtcDashboard dash = FtcDashboard.getInstance();
     private List<Action> runningActions = new ArrayList<>();
 
     @Override
     public void init() {
         robot = new AllMech(hardwareMap);
         servo = new ServoProgramming(hardwareMap);
+
+        currentGamepad1 = new Gamepad();
+        currentGamepad2 = new Gamepad();
+
+        previousGamepad1 = new Gamepad();
+        previousGamepad2 = new Gamepad();
+    }
+
+    @Override
+    public void start() {
+        runningActions.add(
+                robot.updateLinkPID()
+        );
+        runningActions.add(
+                robot.updateVertPID()
+        );
     }
 
     @Override
     public void loop() {
+        previousGamepad1.copy(currentGamepad1);
+        previousGamepad2.copy(currentGamepad2);
+
+        currentGamepad1.copy(gamepad1);
+        currentGamepad2.copy(gamepad2);
+
         TelemetryPacket packet = new TelemetryPacket();
 
         // update based on gamepads.
@@ -67,9 +96,7 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.x){
         runningActions.add(
-                new ParallelAction(
                         new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_LEFT_HALF))
-                )
         );
         }
 
@@ -96,10 +123,8 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.dpad_up) {
             runningActions.add(
-              new ParallelAction(
-                      robot.updateVertPID(),
                       robot.setElevatorTarget(2500)
-              )
+
             );
         }
 
@@ -108,28 +133,23 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.dpad_down) {
             runningActions.add(
-                    new ParallelAction(
-                            robot.updateVertPID(),
                             robot.setElevatorTarget(-20)
-                    )
+
             );
         }
 
         if (gamepad2.dpad_left) {
             runningActions.add(
-                new ParallelAction(
-                        robot.updateLinkPID(),
+
                         robot.setLinkageTarget(500)
-                )
+
             );
         }
 
         if (gamepad2.dpad_right) {
             runningActions.add(
-                    new ParallelAction(
-                            robot.updateLinkPID(),
+
                             robot.setLinkageTarget(0)
-                    )
             );
         }
 
@@ -167,7 +187,19 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            runningActions.add(
+                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 100)
 
+            );
+        }
+
+        if (!currentGamepad2.left_bumper && previousGamepad2.left_bumper) {
+            runningActions.add(
+
+                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 100)
+            );
+        }
 
 
         List<Action> newActions = new ArrayList<>();

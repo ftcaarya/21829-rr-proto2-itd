@@ -78,13 +78,13 @@ public class TeleopWithActions extends OpMode {
         // update based on gamepads.
         double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
-        double rx = -gamepad1.right_stick_x;
+        double rx = gamepad1.right_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), .5);
-        double frontLeftPower = (y + x - rx) / denominator;
+        double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x + rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
 
 
         robot.frontLeft.setPower(frontLeftPower);

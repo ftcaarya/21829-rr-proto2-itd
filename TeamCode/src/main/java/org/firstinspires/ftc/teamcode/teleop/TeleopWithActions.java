@@ -94,28 +94,15 @@ public class TeleopWithActions extends OpMode {
 
 
 
-        if (gamepad2.x){
+        if (currentGamepad2.x && !previousGamepad2.x){
         runningActions.add(
-                        new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_LEFT_HALF))
+                        new InstantAction(() -> servo.rotate.setPosition(servo.rotate.getPosition() + .1))
         );
         }
 
-        if (gamepad2.b){
+        if (!currentGamepad2.b && previousGamepad2.b){
             runningActions.add(
-                    new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_RIGHT_HALF))
-
-            );
-        }
-
-        if (gamepad2.right_stick_button){
-            runningActions.add(
-                    new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_RESET))
-
-            );
-        }
-        if (gamepad2.left_stick_button){
-            runningActions.add(
-                    new InstantAction(() -> servo.rotate.setPosition(ROTATE_SERVO_PERP))
+                    new InstantAction(() -> servo.rotate.setPosition(servo.rotate.getPosition() - .1))
 
             );
         }
@@ -187,14 +174,14 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper && AllMech.elevator.getCurrentPosition() <= 500) {
             runningActions.add(
                             robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 100)
 
             );
         }
 
-        if (!currentGamepad2.left_bumper && previousGamepad2.left_bumper) {
+        if (!currentGamepad2.left_bumper && previousGamepad2.left_bumper && AllMech.elevator.getCurrentPosition() <= 500) {
             runningActions.add(
 
                             robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 100)

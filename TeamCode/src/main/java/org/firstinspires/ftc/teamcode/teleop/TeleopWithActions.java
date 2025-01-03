@@ -201,7 +201,8 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05))
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05)),
+                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() - .075))
                     )
 
             );
@@ -211,7 +212,8 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05))
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05)),
+                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() + .075))
                     )
 
             );

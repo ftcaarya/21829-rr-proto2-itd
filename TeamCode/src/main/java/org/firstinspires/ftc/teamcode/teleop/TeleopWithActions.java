@@ -21,6 +21,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.extraneous.AllMech;
@@ -80,12 +81,15 @@ public class TeleopWithActions extends OpMode {
         double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
 
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), .5);
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
+        double frontLeftPower = (y + x + rx);
+        double backLeftPower = (y - x + rx);
+        double frontRightPower = (y - x - rx);
+        double backRightPower = (y + x - rx);
 
+        frontLeftPower = Range.clip(frontLeftPower, -0.7, 0.7);
+        backLeftPower = Range.clip(backLeftPower, -0.7, 0.7);
+        frontRightPower = Range.clip(frontRightPower, -0.7, 0.7);
+        backRightPower = Range.clip(backRightPower, -0.7, 0.7);
 
         robot.frontLeft.setPower(frontLeftPower);
         robot.rearLeft.setPower(backLeftPower);
@@ -95,9 +99,9 @@ public class TeleopWithActions extends OpMode {
 
 
         if (currentGamepad2.x && !previousGamepad2.x){
-        runningActions.add(
-                        new InstantAction(() -> servo.rotate.setPosition(servo.rotate.getPosition() + .1))
-        );
+            runningActions.add(
+                new InstantAction(() -> servo.rotate.setPosition(servo.rotate.getPosition() + .1))
+            );
         }
 
         if (!currentGamepad2.b && previousGamepad2.b){
@@ -127,8 +131,13 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.dpad_left) {
             runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
+                            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
+                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN)),
+                            robot.setLinkageTarget(500)
+                    )
 
-                        robot.setLinkageTarget(500)
 
             );
         }
@@ -174,17 +183,37 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper && AllMech.elevator.getCurrentPosition() <= 500) {
+        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && AllMech.elevator.getCurrentPosition() <= 1000) {
             runningActions.add(
-                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 100)
+                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 200)
 
             );
         }
 
-        if (!currentGamepad2.left_bumper && previousGamepad2.left_bumper && AllMech.elevator.getCurrentPosition() <= 500) {
+        if (!currentGamepad1.left_bumper && previousGamepad1.left_bumper) {
             runningActions.add(
 
-                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 100)
+                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 200)
+            );
+        }
+
+        if (!currentGamepad1.y && previousGamepad1.y) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05))
+                    )
+
+            );
+        }
+
+        if (currentGamepad1.a && !previousGamepad1.a) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05))
+                    )
+
             );
         }
 

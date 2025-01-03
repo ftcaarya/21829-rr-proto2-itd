@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoProgramming {
     public Servo arm, wrist, rotate, claw, leftArm;
 
-    public static final double ARM_SERVO_DOWN = .582;
+    public static final double ARM_SERVO_DOWN = .6;
     public static final double ARM_SERVO_UP = .45;
 
     public static final double WRIST_SERVO_DOWN = .84;
     public static final double WRIST_SERVO_UP = 0.375;
 
     public static final double LEFT_ARM_SERVO_UP = .55;
-    public static final double LEFT_ARM_SERVO_DOWN = .378;
+    public static final double LEFT_ARM_SERVO_DOWN = .4;
 
 
 

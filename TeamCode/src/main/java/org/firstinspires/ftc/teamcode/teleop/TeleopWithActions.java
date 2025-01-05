@@ -213,6 +213,37 @@ public class TeleopWithActions extends OpMode {
 
         if (currentGamepad1.a && !previousGamepad1.a) {
             runningActions.add(
+                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 200)
+
+            );
+        }
+
+        if (!currentGamepad1.left_bumper && previousGamepad1.left_bumper) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05)),
+                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() + .075))
+                    )
+
+
+                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 200)
+            );
+        }
+
+        if (!currentGamepad1.y && previousGamepad1.y) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05)),
+                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() - .075))
+                    )
+
+            );
+        }
+
+        if (currentGamepad1.a && !previousGamepad1.a) {
+            runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
                             new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05)),

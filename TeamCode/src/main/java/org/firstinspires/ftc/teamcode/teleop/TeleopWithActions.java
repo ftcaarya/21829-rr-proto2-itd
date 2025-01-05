@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.extraneous.AllMech;
 import org.firstinspires.ftc.teamcode.extraneous.ServoProgramming;
@@ -84,6 +85,20 @@ public class TeleopWithActions extends OpMode {
         double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
 
+//        if (gamepad1.options) {
+//            robot.imu.resetYaw();
+//        }
+//
+//        double botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//
+//        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+//        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+//        double frontLeftPower = (rotY + rotX + rx);
+//        double backLeftPower = (rotY - rotX + rx);
+//        double frontRightPower = (rotY - rotX - rx);
+//        double backRightPower = (rotY + rotX - rx);
+
         double frontLeftPower = (y + x + rx);
         double backLeftPower = (y - x + rx);
         double frontRightPower = (y - x - rx);
@@ -138,7 +153,7 @@ public class TeleopWithActions extends OpMode {
                             new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
                             new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
                             new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN)),
-                            robot.setLinkageTarget(500)
+                            robot.setLinkageTarget(550)
                     )
 
 
@@ -220,14 +235,7 @@ public class TeleopWithActions extends OpMode {
 
         if (!currentGamepad1.left_bumper && previousGamepad1.left_bumper) {
             runningActions.add(
-                    new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() + .075))
-                    )
-
-
-                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 200)
+                    robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 200)
             );
         }
 

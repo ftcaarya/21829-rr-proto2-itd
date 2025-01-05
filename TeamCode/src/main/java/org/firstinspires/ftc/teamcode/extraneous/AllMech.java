@@ -6,11 +6,13 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class AllMech extends LinearOpMode {
@@ -18,6 +20,8 @@ public class AllMech extends LinearOpMode {
     public DcMotor frontLeft, frontRight, rearRight, rearLeft;
     public Servo arm, wrist, rotate, claw, leftArm;
     public static DcMotor linkage, elevator;
+
+    public IMU imu;
 
     PIDController linkageController;
     PIDController vertController;
@@ -58,6 +62,13 @@ public class AllMech extends LinearOpMode {
         rearRight = hardwareMap.get(DcMotorEx.class, "right rear motor");
         rearLeft = hardwareMap.get(DcMotorEx.class, "left rear motor");
 
+        imu = hardwareMap.get(IMU.class, "imu");
+
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+
+        imu.initialize(parameters);
 
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

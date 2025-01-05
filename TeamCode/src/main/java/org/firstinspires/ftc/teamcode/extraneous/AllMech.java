@@ -1,5 +1,17 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_UP;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -26,6 +38,8 @@ public class AllMech extends LinearOpMode {
     PIDController linkageController;
     PIDController vertController;
 
+    ServoProgramming servo;
+
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
     public static double pl = 0.014, il = 0.0, dl = 0.001;
     public static double fv = 0.175, fl = 0.15;
@@ -49,6 +63,8 @@ public class AllMech extends LinearOpMode {
 
         linkageController = new PIDController(pl, il, dl);
         vertController = new PIDController(pv, iv, dv);
+
+        servo = new ServoProgramming(hardwareMap);
 
         arm = hardwareMap.get(Servo.class, "arm servo");
         leftArm = hardwareMap.get(Servo.class, "left arm servo");
@@ -139,8 +155,74 @@ public class AllMech extends LinearOpMode {
         return new UpdateVertPID();
     }
 
+    public class ServoSpecimen implements Action {
 
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            servo.arm.setPosition(ARM_SERVO_SPEC);
+            servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC);
+            servo.wrist.setPosition(WRIST_SERVO_SPEC);
+            return false;
+        }
+    }
 
+    public Action servoSpecimen() {
+        return new ServoSpecimen();
+    }
+
+    public class ServoUp implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            servo.arm.setPosition(ARM_SERVO_UP);
+            servo.leftArm.setPosition(LEFT_ARM_SERVO_UP);
+            servo.wrist.setPosition(WRIST_SERVO_UP);
+
+            return false;
+        }
+    }
+
+    public Action servoUp() {
+        return new ServoUp();
+    }
+
+    public class ServoDown implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            servo.arm.setPosition(ARM_SERVO_DOWN);
+            servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN);
+            servo.wrist.setPosition(WRIST_SERVO_DOWN);
+            return false;
+        }
+    }
+    public Action servoDown() {
+        return new ServoDown();
+    }
+
+    public class clawClose implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            servo.claw.setPosition(CLAW_CLOSE);
+            return false;
+        }
+    }
+    public Action clawClose() {
+        return new clawClose();
+    }
+
+    public class clawOpen implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            servo.claw.setPosition(CLAW_OPEN);
+            return false;
+        }
+    }
+    public Action clawOpen() {
+        return new clawOpen();
+    }
 
 
     @Override

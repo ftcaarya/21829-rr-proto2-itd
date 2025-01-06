@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.autoTrajectories;
 
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -55,6 +59,7 @@ public class RightSideStarting extends LinearOpMode {
 
 
 
+
         waitForStart();
         Actions.runBlocking(
 
@@ -63,60 +68,60 @@ public class RightSideStarting extends LinearOpMode {
                 robot.updateVertPID(),
 
                 new SequentialAction(
-                        robot.clawClose(),
-                       dropPreloaded.build(),
-                       robot.setElevatorTarget(1200),
-                       robot.setLinkageTarget(550),
-                        robot.servoDown(),
+                        robot.clawClose,
+                        dropPreloaded.build(),
+                        robot.setElevatorTarget(1200),
+                        robot.setLinkageTarget(550),
+                        robot.servoDown,
                         robot.setElevatorTarget(-20),
+                        robot.clawOpen,
                         robot.setLinkageTarget(0),
-                        robot.clawOpen(),
                         getFirstSample.build(),
                         robot.setElevatorTarget(500),
-                        robot.clawClose(),
+                        robot.clawClose,
                         dropFirstSample.build(),
-                        robot.clawClose(),
+                        robot.clawOpen,
                         getSecondSample.build(),
-                        robot.clawClose(),
+                        robot.clawClose,
                         dropSecondSample.build(),
-                        robot.clawOpen(),
-                        robot.servoSpecimen(),
-
+                        robot.clawOpen,
+                        robot.servoSpecimen,
+                        robot.setElevatorTarget(-20),
                         getFirstSpecimen.build(),
-                        robot.clawClose(),
-                        robot.servoDown(),
+                        robot.clawClose,
+                        robot.servoDown,
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen(),
+                        robot.clawOpen,
 
                         getSpecimen.build(),
-                        robot.clawClose(),
-                        robot.servoDown(),
+                        robot.clawClose,
+                        robot.servoDown,
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen(),
+                        robot.clawOpen,
 
                         getSpecimen.build(),
-                        robot.clawClose(),
-                        robot.servoDown(),
+                        robot.clawClose,
+                        robot.servoDown,
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen(),
+                        robot.clawOpen,
 
                         getSpecimen.build(),
-                        robot.clawClose(),
-                        robot.servoDown(),
+                        robot.clawClose,
+                        robot.servoDown,
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen()
+                        robot.clawOpen
                 )
 
 

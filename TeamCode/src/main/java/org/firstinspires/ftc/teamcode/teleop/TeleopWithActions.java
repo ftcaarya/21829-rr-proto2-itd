@@ -270,9 +270,9 @@ public class TeleopWithActions extends OpMode {
         if (gamepad1.dpad_down){
             runningActions.add(
                     new ParallelAction(
-                    new InstantAction(()-> servo.arm.setPosition(ARM_SERVO_SPEC)),
-                    new InstantAction(()-> servo.wrist.setPosition(WRIST_SERVO_SPEC)),
-                    new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC))
+                        new InstantAction(()-> servo.arm.setPosition(ARM_SERVO_SPEC)),
+                        new InstantAction(()-> servo.wrist.setPosition(WRIST_SERVO_SPEC)),
+                        new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC))
                     )
             );
         }

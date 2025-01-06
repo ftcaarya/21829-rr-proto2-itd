@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.autoTrajectories;
 
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -63,60 +67,60 @@ public class RightSideStarting extends LinearOpMode {
                 robot.updateVertPID(),
 
                 new SequentialAction(
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                        dropPreloaded.build(),
                        robot.setElevatorTarget(1200),
                        robot.setLinkageTarget(550),
                         robot.servoDown(),
                         robot.setElevatorTarget(-20),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN)),
                         robot.setLinkageTarget(0),
-                        robot.clawOpen(),
                         getFirstSample.build(),
                         robot.setElevatorTarget(500),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         dropFirstSample.build(),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         getSecondSample.build(),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         dropSecondSample.build(),
-                        robot.clawOpen(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN)),
                         robot.servoSpecimen(),
-
+                        robot.setElevatorTarget(-20),
                         getFirstSpecimen.build(),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         robot.servoDown(),
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN)),
 
                         getSpecimen.build(),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         robot.servoDown(),
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN)),
 
                         getSpecimen.build(),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         robot.servoDown(),
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN)),
 
                         getSpecimen.build(),
-                        robot.clawClose(),
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE)),
                         robot.servoDown(),
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
                         robot.setElevatorTarget(-20),
-                        robot.clawOpen()
+                        new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN))
                 )
 
 

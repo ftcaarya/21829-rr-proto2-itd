@@ -150,9 +150,7 @@ public class TeleopWithActions extends OpMode {
         if (gamepad2.dpad_left) {
             runningActions.add(
                     new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
-                            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
-                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN)),
+                            robot.servoDown,
                             robot.setLinkageTarget(550)
                     )
 
@@ -162,18 +160,13 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.dpad_right) {
             runningActions.add(
-
                     robot.setLinkageTarget(0)
             );
         }
 
         if (gamepad2.a) {
             runningActions.add(
-                    new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
-                            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
-                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN))
-                    )
+                    robot.servoDown
             );
         }
 
@@ -181,27 +174,23 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.y) {
             runningActions.add(
-                    new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
-                            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_UP)),
-                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
-                    )
+                    robot.servoUp
             );
         }
 
         if (gamepad2.right_bumper) {
             runningActions.add(
-                    new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE))
+                    robot.clawClose
             );
         }
 
         if (gamepad2.left_bumper) {
             runningActions.add(
-                    new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN))
+                    robot.clawOpen
             );
         }
 
-        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && AllMech.elevator.getCurrentPosition() <= 1000) {
+        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && AllMech.elevator.getCurrentPosition() <= 800) {
             runningActions.add(
                     robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 200)
 
@@ -239,17 +228,6 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (!currentGamepad1.y && previousGamepad1.y) {
-            runningActions.add(
-                    new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() - .075))
-                    )
-
-            );
-        }
-
         if (currentGamepad1.a && !previousGamepad1.a) {
             runningActions.add(
                     new ParallelAction(
@@ -269,11 +247,7 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad1.dpad_down){
             runningActions.add(
-                    new ParallelAction(
-                        new InstantAction(()-> servo.arm.setPosition(ARM_SERVO_SPEC)),
-                        new InstantAction(()-> servo.wrist.setPosition(WRIST_SERVO_SPEC)),
-                        new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC))
-                    )
+                    robot.servoSpecimen
             );
         }
 

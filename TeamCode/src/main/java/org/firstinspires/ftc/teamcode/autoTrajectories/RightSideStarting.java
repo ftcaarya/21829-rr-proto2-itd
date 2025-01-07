@@ -64,7 +64,8 @@ public class RightSideStarting extends LinearOpMode {
         Actions.runBlocking(
 
                 new ParallelAction(
-                 robot.updateLinkPID(),
+
+                        robot.updateLinkPID(),
                 robot.updateVertPID(),
 
                 new SequentialAction(

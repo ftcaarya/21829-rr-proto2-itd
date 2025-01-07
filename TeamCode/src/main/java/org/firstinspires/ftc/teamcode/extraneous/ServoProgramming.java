@@ -28,7 +28,7 @@ public class ServoProgramming {
 
 
 
-    public static final double CLAW_CLOSE = 1.0;
+    public static final double CLAW_CLOSE = .65;
     public static final double CLAW_OPEN = 0.2;
 
     public ServoProgramming(HardwareMap hardwareMap) {

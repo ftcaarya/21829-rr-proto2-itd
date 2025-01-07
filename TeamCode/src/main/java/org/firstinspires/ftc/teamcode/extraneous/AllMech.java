@@ -101,27 +101,40 @@ public class AllMech extends LinearOpMode {
 
     }
 
-    public ParallelAction servoSpecimen = new ParallelAction(
-            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SPEC)),
-            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC)),
-            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
-    );
+    public Action servoSpecimen() {
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
+        );
+    }
 
-    public ParallelAction servoDown = new ParallelAction(
-            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
-            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
-            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN))
-    );
 
-    public ParallelAction servoUp = new ParallelAction(
-            new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
-            new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_UP)),
-            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
-    );
 
-    public InstantAction clawClose = new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE));
+    public Action servoDown() {
 
-    public InstantAction clawOpen = new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN));
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN))
+        );
+    }
+
+    public Action servoUp(){
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_UP)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
+        );
+    }
+
+    public Action clawClose() {
+        return new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE));
+    }
+
+    public Action clawOpen() {
+        return new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN));
+    }
 
 
 

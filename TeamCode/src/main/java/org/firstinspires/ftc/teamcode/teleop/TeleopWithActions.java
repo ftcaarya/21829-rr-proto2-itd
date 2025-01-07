@@ -150,7 +150,7 @@ public class TeleopWithActions extends OpMode {
         if (gamepad2.dpad_left) {
             runningActions.add(
                     new ParallelAction(
-                            robot.servoDown,
+                            robot.servoDown(),
                             robot.setLinkageTarget(550)
                     )
 
@@ -166,7 +166,7 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.a) {
             runningActions.add(
-                    robot.servoDown
+                    robot.servoDown()
             );
         }
 
@@ -174,19 +174,19 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.y) {
             runningActions.add(
-                    robot.servoUp
+                    robot.servoUp()
             );
         }
 
         if (gamepad2.right_bumper) {
             runningActions.add(
-                    robot.clawClose
+                    robot.clawClose()
             );
         }
 
         if (gamepad2.left_bumper) {
             runningActions.add(
-                    robot.clawOpen
+                    robot.clawOpen()
             );
         }
 
@@ -247,7 +247,7 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad1.dpad_down){
             runningActions.add(
-                    robot.servoSpecimen
+                    robot.servoSpecimen()
             );
         }
 

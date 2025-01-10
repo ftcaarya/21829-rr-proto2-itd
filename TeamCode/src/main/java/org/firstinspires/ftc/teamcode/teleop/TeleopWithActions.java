@@ -1,33 +1,16 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_UP;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_LEFT_HALF;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_PERP;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_RESET;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ROTATE_SERVO_RIGHT_HALF;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.extraneous.AllMech;
 import org.firstinspires.ftc.teamcode.extraneous.ServoProgramming;
 
@@ -151,7 +134,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(550)
+                            robot.setLinkageTarget(500)
                     )
 
 
@@ -208,16 +191,8 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() - .075))
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05))
                     )
-
-            );
-        }
-
-        if (currentGamepad1.a && !previousGamepad1.a) {
-            runningActions.add(
-                            robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() + 200)
 
             );
         }
@@ -231,9 +206,9 @@ public class TeleopWithActions extends OpMode {
         if (currentGamepad1.a && !previousGamepad1.a) {
             runningActions.add(
                     new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() + .075))
+                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.1)),
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.1)),
+                            new InstantAction(()-> servo.wrist.setPosition(servo.wrist.getPosition()- 0.07))
                     )
 
             );
@@ -241,7 +216,7 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad1.dpad_up){
             runningActions.add(
-                    robot.setElevatorTarget(1400)
+                    robot.setElevatorTarget(1100)
             );
         }
 
@@ -251,6 +226,25 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
+        if (gamepad1.x){
+            runningActions.add(
+                    new SequentialAction(
+                            robot.setElevatorTarget(200)
+
+
+                    )
+
+            );
+        }
+        if (gamepad1.b){
+            runningActions.add(
+                    new ParallelAction(
+                            robot.servoSpecimenScore()
+                    )
+
+            );
+
+        }
 
 
         List<Action> newActions = new ArrayList<>();

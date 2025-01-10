@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
 
 import androidx.annotation.NonNull;
@@ -42,8 +45,8 @@ public class AllMech extends LinearOpMode {
     ServoProgramming servo;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
-    public static double pl = 0.014, il = 0.0, dl = 0.001;
-    public static double fv = 0.175, fl = 0.15;
+    public static double pl = 0.018, il = 0.0, dl = 0.0001;
+    public static double fv = 0.175, fl = 0.12;
 
     public volatile int linkTarget = 0;
     public static int vertTarget;
@@ -57,10 +60,11 @@ public class AllMech extends LinearOpMode {
         linkage.setDirection(DcMotorSimple.Direction.REVERSE);
         elevator = hardwareMap.get(DcMotor.class, "elevator");
 
-        linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         linkageController = new PIDController(pl, il, dl);
         vertController = new PIDController(pv, iv, dv);
@@ -120,12 +124,35 @@ public class AllMech extends LinearOpMode {
         );
     }
 
+    public Action servoGet(){
+
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+0.1)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.1)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN-0.07))
+        );
+
+
+
+
+
+    }
+
     public Action servoUp(){
         return new ParallelAction(
                 new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
                 new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_UP)),
                 new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
         );
+    }
+
+    public Action servoSpecimenScore(){
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SCORE)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SCORE)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC_SCORE))
+        );
+
     }
 
     public Action clawClose() {

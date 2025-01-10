@@ -7,17 +7,21 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoProgramming {
     public Servo arm, wrist, rotate, claw, leftArm;
 
-    public static final double ARM_SERVO_DOWN = .6;
-    public static final double ARM_SERVO_UP = .45;
-    public static final double ARM_SERVO_SPEC = .52;
+    public static final double ARM_SERVO_DOWN = .55;
+    public static final double ARM_SERVO_UP = .4;
+    public static final double ARM_SERVO_SPEC = .47;
+    public static final double ARM_SERVO_SCORE = .65;
 
     public static final double WRIST_SERVO_DOWN = .84;
     public static final double WRIST_SERVO_UP = 0.375;
+    public static final double WRIST_SERVO_SPEC_SCORE = 0.1;
     public static final double WRIST_SERVO_SPEC = 0.49;
 
-    public static final double LEFT_ARM_SERVO_UP = .55;
-    public static final double LEFT_ARM_SERVO_DOWN = .4;
-    public static final double LEFT_ARM_SERVO_SPEC = .48;
+    public static final double LEFT_ARM_SERVO_UP = .9;
+    public static final double LEFT_ARM_SERVO_DOWN = .75;
+    public static final double LEFT_ARM_SERVO_SPEC = .82;
+
+    public static final double LEFT_ARM_SERVO_SCORE = .65;
 
 
 
@@ -28,8 +32,8 @@ public class ServoProgramming {
 
 
 
-    public static final double CLAW_CLOSE = 1.0;
-    public static final double CLAW_OPEN = 0.2;
+    public static final double CLAW_CLOSE = 0;
+    public static final double CLAW_OPEN = 0.5;
 
     public ServoProgramming(HardwareMap hardwareMap) {
         arm = hardwareMap.get(Servo.class, "arm servo");

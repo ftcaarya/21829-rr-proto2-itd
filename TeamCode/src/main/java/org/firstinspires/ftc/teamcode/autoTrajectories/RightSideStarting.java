@@ -61,21 +61,27 @@ public class RightSideStarting extends LinearOpMode {
                 new ParallelAction(
                  robot.updateLinkPID(),
                 robot.updateVertPID(),
-
                 new SequentialAction(
                         robot.clawClose(),
-                       dropPreloaded.build(),
-                       robot.setElevatorTarget(1200),
-                       robot.setLinkageTarget(550),
-                        robot.servoDown(),
-                        robot.setElevatorTarget(-20),
-                        robot.setLinkageTarget(0),
+
+                       new ParallelAction(
+                               dropPreloaded.build(),
+                               robot.setElevatorTarget(1200),
+                               robot.setLinkageTarget(550),
+                               robot.servoDown()
+                       ),
+
+
+                        robot.setElevatorTarget(900),
                         robot.clawOpen(),
+                        robot.setLinkageTarget(0),
+                        robot.setElevatorTarget(-20),
+
                         getFirstSample.build(),
                         robot.setElevatorTarget(500),
                         robot.clawClose(),
                         dropFirstSample.build(),
-                        robot.clawClose(),
+                        robot.clawOpen(),
                         getSecondSample.build(),
                         robot.clawClose(),
                         dropSecondSample.build(),
@@ -88,8 +94,9 @@ public class RightSideStarting extends LinearOpMode {
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
-                        robot.setElevatorTarget(-20),
+                        robot.setElevatorTarget(900),
                         robot.clawOpen(),
+                        robot.setLinkageTarget(0),
 
                         getSpecimen.build(),
                         robot.clawClose(),
@@ -97,7 +104,7 @@ public class RightSideStarting extends LinearOpMode {
                         robot.setLinkageTarget(550),
                         robot.setElevatorTarget(1200),
                         scoreSpecimen.build(),
-                        robot.setElevatorTarget(-20),
+                        robot.setElevatorTarget(900),
                         robot.clawOpen(),
 
                         getSpecimen.build(),

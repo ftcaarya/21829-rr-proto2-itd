@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -100,6 +104,54 @@ public class AllMech extends LinearOpMode {
 
     }
 
+    public Action servoSpecimen() {
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
+        );
+    }
+
+
+
+    public Action servoDown() {
+
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN))
+        );
+    }
+
+    public Action servoUp(){
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_UP)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_UP)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_UP))
+        );
+    }
+
+    public Action servoSpecimenScore(){
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SCORE)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SCORE)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC_SCORE))
+
+
+        );
+
+    }
+
+    public Action clawClose() {
+        return new InstantAction(() -> servo.claw.setPosition(CLAW_CLOSE));
+    }
+
+    public Action clawOpen() {
+        return new InstantAction(() -> servo.claw.setPosition(CLAW_OPEN));
+    }
+
+
+
     public Action setLinkageTarget(int target) {
         return new InstantAction(() -> linkTarget = target);
     }
@@ -155,74 +207,50 @@ public class AllMech extends LinearOpMode {
         return new UpdateVertPID();
     }
 
-    public class ServoSpecimen implements Action {
+//    public class ServoSpecimen implements Action {
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            servo.arm.setPosition(ARM_SERVO_SPEC);
+//            servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC);
+//            servo.wrist.setPosition(WRIST_SERVO_SPEC);
+//            return false;
+//        }
+//    }
+//
+//    public Action servoSpecimen() {
+//        return new ServoSpecimen();
+//    }
 
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            servo.arm.setPosition(ARM_SERVO_SPEC);
-            servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC);
-            servo.wrist.setPosition(WRIST_SERVO_SPEC);
-            return false;
-        }
-    }
+//    public class ServoUp implements Action {
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            servo.arm.setPosition(ARM_SERVO_UP);
+//            servo.leftArm.setPosition(LEFT_ARM_SERVO_UP);
+//            servo.wrist.setPosition(WRIST_SERVO_UP);
+//
+//            return false;
+//        }
+//    }
+//
+//    public Action servoUp() {
+//        return new ServoUp();
+//    }
 
-    public Action servoSpecimen() {
-        return new ServoSpecimen();
-    }
-
-    public class ServoUp implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            servo.arm.setPosition(ARM_SERVO_UP);
-            servo.leftArm.setPosition(LEFT_ARM_SERVO_UP);
-            servo.wrist.setPosition(WRIST_SERVO_UP);
-
-            return false;
-        }
-    }
-
-    public Action servoUp() {
-        return new ServoUp();
-    }
-
-    public class ServoDown implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            servo.arm.setPosition(ARM_SERVO_DOWN);
-            servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN);
-            servo.wrist.setPosition(WRIST_SERVO_DOWN);
-            return false;
-        }
-    }
-    public Action servoDown() {
-        return new ServoDown();
-    }
-
-    public class clawClose implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            servo.claw.setPosition(CLAW_CLOSE);
-            return false;
-        }
-    }
-    public Action clawClose() {
-        return new clawClose();
-    }
-
-    public class clawOpen implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            servo.claw.setPosition(CLAW_OPEN);
-            return false;
-        }
-    }
-    public Action clawOpen() {
-        return new clawOpen();
-    }
+//    public class ServoDown implements Action {
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            servo.arm.setPosition(ARM_SERVO_DOWN);
+//            servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN);
+//            servo.wrist.setPosition(WRIST_SERVO_DOWN);
+//            return false;
+//        }
+//    }
+//    public Action servoDown() {
+//        return new ServoDown();
+//    }
 
 
     @Override

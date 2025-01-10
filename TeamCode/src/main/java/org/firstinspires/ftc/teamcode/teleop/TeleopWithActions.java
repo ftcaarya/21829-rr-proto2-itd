@@ -134,7 +134,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(550)
+                            robot.setLinkageTarget(500)
                     )
 
 
@@ -191,8 +191,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() - .075))
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05))
                     )
 
             );
@@ -207,9 +206,9 @@ public class TeleopWithActions extends OpMode {
         if (currentGamepad1.a && !previousGamepad1.a) {
             runningActions.add(
                     new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.wrist.setPosition(servo.wrist.getPosition() + .075))
+                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.1)),
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.1)),
+                            new InstantAction(()-> servo.wrist.setPosition(servo.wrist.getPosition()- 0.07))
                     )
 
             );

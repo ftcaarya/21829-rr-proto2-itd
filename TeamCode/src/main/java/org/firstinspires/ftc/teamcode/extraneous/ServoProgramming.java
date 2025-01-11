@@ -10,7 +10,7 @@ public class ServoProgramming {
     public static final double ARM_SERVO_DOWN = .6;
     public static final double ARM_SERVO_UP = .5;
     public static final double ARM_SERVO_SPEC = .56;
-    public static final double ARM_SERVO_SCORE = .78;
+    public static final double ARM_SERVO_SCORE = .74;
 
     public static final double WRIST_SERVO_DOWN = .84;
     public static final double WRIST_SERVO_UP = 0.375;

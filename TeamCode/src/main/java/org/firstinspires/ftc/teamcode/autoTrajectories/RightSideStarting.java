@@ -28,7 +28,7 @@ public class RightSideStarting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(0, -61, Math.toRadians(270));
+        Pose2d initialPose = new Pose2d(10, -61, Math.toRadians(270));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         robot = new AllMech(hardwareMap);

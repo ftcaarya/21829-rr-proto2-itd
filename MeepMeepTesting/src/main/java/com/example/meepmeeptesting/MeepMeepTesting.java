@@ -73,13 +73,13 @@ public class MeepMeepTesting {
                 // get second sample
                 .turnTo(Math.toRadians(35))
                 // drop second sample
-                .strafeToLinearHeading(new Vector2d(47, -42), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(47, -40), Math.toRadians(270))
                 // pick specimen 1
                 .strafeToConstantHeading(new Vector2d(47, -47.5))
                 //drop specimen 1
                 .strafeToLinearHeading(new Vector2d(-5, -29), Math.toRadians(270))
                 //pick specimen 2
-                        .setReversed(false)
+                .setReversed(false)
                 .splineToLinearHeading(new Pose2d(47, -42, Math.toRadians(270)), Math.PI/9)
                 .strafeToConstantHeading(new Vector2d(47, -47.5), new TranslationalVelConstraint(20.0))
                 //drop specimen 2

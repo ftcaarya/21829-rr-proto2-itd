@@ -113,6 +113,9 @@ public class AllMech extends LinearOpMode {
                 new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
         );
     }
+    public Action moveRotate(double position) {
+        return new InstantAction(() -> servo.rotate.setPosition(position));
+    }
 
     public Action moveRotate(double position) {
         return new InstantAction(() -> servo.rotate.setPosition(position));
@@ -130,8 +133,9 @@ public class AllMech extends LinearOpMode {
     public Action servoGet(){
 
         return new ParallelAction(
-                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+0.055)),
-                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.055)),
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+0.07)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.266)),
+
                 new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN-0.07))
         );
 
@@ -256,6 +260,40 @@ public class AllMech extends LinearOpMode {
     public Action updateVertPID() {
         return new UpdateVertPID();
     }
+
+    public class UpdatePID implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            linkageController.setPID(pl, il ,dl);
+            vertController.setPID(pv, iv, dv);
+
+            int linkagePos = linkage.getCurrentPosition();
+            int vertPos = elevator.getCurrentPosition();
+
+            double linkagePID = linkageController.calculate(linkagePos, linkTarget);
+            double vertPID = vertController.calculate(vertPos, vertTarget);
+
+            double linkFF = Math.cos(Math.toRadians(linkTarget / ticks_in_degree)) * fl;
+            double vertFF = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * fv;
+
+            double linkPower = linkagePID + linkFF;
+            double vertPower = vertPID + vertFF;
+
+            elevator.setPower(vertPower);
+            linkage.setPower(linkPower);
+            System.out.println("link target position: " + linkTarget);
+            System.out.println("link current position: " + linkagePos);
+            System.out.println("link power" + linkPower);
+
+            return true;
+        }
+    }
+
+    public Action updatePID() {
+        return new UpdatePID();
+    }
+
 
 //    public class ServoSpecimen implements Action {
 //

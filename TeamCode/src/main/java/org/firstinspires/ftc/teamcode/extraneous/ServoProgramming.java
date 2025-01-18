@@ -9,20 +9,19 @@ public class ServoProgramming {
 
     public static final double ARM_SERVO_DOWN = .6;
     public static final double ARM_SERVO_UP = .5;
-    public static final double ARM_SERVO_SPEC = .56;
-    public static final double ARM_SERVO_SCORE = .74;
+    public static final double ARM_SERVO_SPEC = .6;
+    public static final double ARM_SERVO_SCORE = .82;
 
     public static final double WRIST_SERVO_DOWN = .84;
     public static final double WRIST_SERVO_UP = 0.375;
     public static final double WRIST_SERVO_SPEC_SCORE = 0.1;
     public static final double WRIST_SERVO_SPEC = 0.49;
 
-    public static final double LEFT_ARM_SERVO_UP = .9;
-    public static final double LEFT_ARM_SERVO_DOWN = .8;
-    public static final double LEFT_ARM_SERVO_SPEC = .83;
+    public static final double LEFT_ARM_SERVO_UP = .5;//.9
+    public static final double LEFT_ARM_SERVO_DOWN = .46;//.8
+    public static final double LEFT_ARM_SERVO_SPEC = .46;//.83
 
-    public static final double LEFT_ARM_SERVO_SCORE = .62;
-
+    public static final double LEFT_ARM_SERVO_SCORE = .3312;//.62
 
 
     public static final double ROTATE_SERVO_RESET = 0.1;

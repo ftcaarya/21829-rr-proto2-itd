@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,6 +66,11 @@ public class RightSideStarting extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-9, -29), Math.toRadians(270))
                 .strafeToConstantHeading(new Vector2d(5, -28), new TranslationalVelConstraint(20.0));
 
+        TrajectoryActionBuilder getFirstSpecimen = drive.actionBuilder(new Pose2d(-47,-47,Math.toRadians(270)))
+                .strafeTo(new Vector2d(-47,-50));
+
+        TrajectoryActionBuilder scoreSpecimen = drive.actionBuilder(new Pose2d(47,-50,Math.toRadians(270)))
+                .strafeToLinearHeading(new Vector2d(0,-36), Math.toRadians(270));
         TrajectoryActionBuilder scoreThirdSpecimen = drive.actionBuilder(new Pose2d(47, -47.5, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(-9, -29), Math.toRadians(270));
 
@@ -148,8 +154,6 @@ public class RightSideStarting extends LinearOpMode {
                                 new SleepAction(0.25),
                                 Move3Spec.build(),
                                 robot.clawOpen()
-
-
 
 
 //                        getSecondSample.build(),

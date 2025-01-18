@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -44,6 +45,7 @@ public class RightSideStarting extends LinearOpMode {
 
         TrajectoryActionBuilder getFirstSpecimen = drive.actionBuilder(new Pose2d(-47,-47,Math.toRadians(270)))
                 .strafeTo(new Vector2d(-47,-50));
+
         TrajectoryActionBuilder scoreSpecimen = drive.actionBuilder(new Pose2d(47,-50,Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(0,-36), Math.toRadians(270));
 
@@ -70,10 +72,10 @@ public class RightSideStarting extends LinearOpMode {
                                robot.servoSpecimenScore()
                        ),
                         new SleepAction(0.2),
-                        robot.setLinkageTarget(100),
+                        robot.setLinkageTarget(10),
                         new SleepAction(2),
                         robot.setElevatorTarget(1100),
-                        new SleepAction(0.4),
+                        new SleepAction(0.5),
                         robot.clawOpen()
 
 

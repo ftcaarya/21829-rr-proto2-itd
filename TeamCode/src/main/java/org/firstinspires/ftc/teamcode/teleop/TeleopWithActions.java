@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -191,7 +192,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() - 0.05)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.05))
+                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() + 0.019))
                     )
 
             );
@@ -205,11 +206,12 @@ public class TeleopWithActions extends OpMode {
 
         if (currentGamepad1.a && !previousGamepad1.a) {
             runningActions.add(
-                    new ParallelAction(
-                            new InstantAction(() -> servo.arm.setPosition(servo.arm.getPosition() + 0.1)),
-                            new InstantAction(() -> servo.leftArm.setPosition(servo.leftArm.getPosition() - 0.1)),
-                            new InstantAction(()-> servo.wrist.setPosition(servo.wrist.getPosition()- 0.07))
-                    )
+                    new SequentialAction(
+                            robot.servoGet(),
+                            new SleepAction(200),
+                            robot.clawClose(),
+                            robot.servoDown()
+                            )
 
             );
         }

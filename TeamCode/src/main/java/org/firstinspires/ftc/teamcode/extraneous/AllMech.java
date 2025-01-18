@@ -45,7 +45,7 @@ public class AllMech extends LinearOpMode {
     ServoProgramming servo;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
-    public static double pl = 0.018, il = 0.0, dl = 0.0001;
+    public static double pl = 0.018, il = 0.0, dl = 0.00001;
     public static double fv = 0.175, fl = 0.12;
 
     public volatile int linkTarget = 0;
@@ -128,7 +128,7 @@ public class AllMech extends LinearOpMode {
 
         return new ParallelAction(
                 new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+0.1)),
-                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.1)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.038)),
                 new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN-0.07))
         );
 

@@ -45,7 +45,7 @@ public class AllMech extends LinearOpMode {
     ServoProgramming servo;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
-    public static double pl = 0.018, il = 0.0, dl = 0.00001;
+    public static double pl = 0.014, il = 0.0, dl = 0.0001;
     public static double fv = 0.175, fl = 0.12;
 
     public volatile int linkTarget = 0;
@@ -65,6 +65,7 @@ public class AllMech extends LinearOpMode {
         linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        System.out.println("subsystem encoders reset");
 
         linkageController = new PIDController(pl, il, dl);
         vertController = new PIDController(pv, iv, dv);
@@ -116,7 +117,9 @@ public class AllMech extends LinearOpMode {
         return new InstantAction(() -> servo.rotate.setPosition(position));
     }
 
-
+    public Action moveRotate(double position) {
+        return new InstantAction(() -> servo.rotate.setPosition(position));
+    }
 
     public Action servoDown() {
 
@@ -132,6 +135,7 @@ public class AllMech extends LinearOpMode {
         return new ParallelAction(
                 new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+0.07)),
                 new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.266)),
+
                 new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN-0.07))
         );
 
@@ -177,6 +181,7 @@ public class AllMech extends LinearOpMode {
     }
 
     public class UpdateLinkPID implements Action {
+
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             linkageController.setPID(pl, il ,dl);
@@ -199,6 +204,39 @@ public class AllMech extends LinearOpMode {
     }
     public Action updateLinkPID(){
         return new UpdateLinkPID();
+    }
+
+    public class UpdatePID implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            linkageController.setPID(pl, il ,dl);
+            vertController.setPID(pv, iv, dv);
+
+            int linkagePos = linkage.getCurrentPosition();
+            int vertPos = elevator.getCurrentPosition();
+
+            double linkagePID = linkageController.calculate(linkagePos, linkTarget);
+            double vertPID = vertController.calculate(vertPos, vertTarget);
+
+            double linkFF = Math.cos(Math.toRadians(linkTarget / ticks_in_degree)) * fl;
+            double vertFF = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * fv;
+
+            double linkPower = linkagePID + linkFF;
+            double vertPower = vertPID + vertFF;
+
+            elevator.setPower(vertPower);
+            linkage.setPower(linkPower);
+            System.out.println("link target position: " + linkTarget);
+            System.out.println("link current position: " + linkagePos);
+            System.out.println("link power" + linkPower);
+
+            return true;
+        }
+    }
+
+    public Action updatePID() {
+        return new UpdatePID();
     }
 
     public class UpdateVertPID implements Action {

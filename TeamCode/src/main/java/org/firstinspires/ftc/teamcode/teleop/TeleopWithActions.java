@@ -204,14 +204,9 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (currentGamepad1.a && !previousGamepad1.a) {
+        if (currentGamepad1.a) {
             runningActions.add(
-                    new SequentialAction(
-                            robot.servoGet(),
-                            new SleepAction(200),
-                            robot.clawClose(),
-                            robot.servoDown()
-                            )
+                   robot.servoGet()
 
             );
         }

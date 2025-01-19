@@ -9,42 +9,32 @@ import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_S
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Hardware testing", group = "exercises")
 public class HardwareTesting extends OpMode {
     ServoProgramming servo;
     AllMech robot;
 
+    Servo servoTesting;
+
     @Override
     public void init() {
         servo = new ServoProgramming(hardwareMap);
         robot = new AllMech(hardwareMap);
+
+        servoTesting = hardwareMap.get(Servo.class, "testing");
     }
 
     @Override
     public void loop() {
-        if (gamepad1.y) {
-            servo.arm.setPosition(ARM_SERVO_UP);
-        }
-
         if (gamepad1.a) {
-            servo.arm.setPosition(ARM_SERVO_DOWN);
+            servoTesting.setPosition(1);
+        } else if (gamepad1.b) {
+            servoTesting.setPosition(0);
         }
 
-        if (gamepad1.x) {
-            servo.claw.setPosition(CLAW_OPEN);
-        }
-
-        if (gamepad1.b) {
-            servo.claw.setPosition(CLAW_CLOSE);
-        }
-
-        if (gamepad1.dpad_down) {
-            servo.wrist.setPosition(WRIST_SERVO_DOWN);
-        }
-        if (gamepad1.dpad_up){
-            servo.wrist.setPosition(WRIST_SERVO_UP);
-        }
-
+        telemetry.addData("position: ", servoTesting.getPosition());
     }
 }

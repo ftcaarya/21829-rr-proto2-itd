@@ -36,26 +36,26 @@ public class RightSideStarting extends LinearOpMode {
         servo = new ServoProgramming(hardwareMap);
 
         TrajectoryActionBuilder dropPreloaded = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(0, -31), Math.toRadians(270));
+                .strafeToLinearHeading(new Vector2d(0, -32), Math.toRadians(270));
 
-        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(0, -31, Math.toRadians(270)))
+        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(0, -32, Math.toRadians(270)))
                 .setReversed(false)
-                .splineToLinearHeading(new Pose2d(33, -38, Math.toRadians(45)), Math.toRadians(45));
+                .splineToLinearHeading(new Pose2d(33, -35, Math.toRadians(40)), Math.toRadians(45));
 
-        TrajectoryActionBuilder dropFirstSample = drive.actionBuilder(new Pose2d(33, -38, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(38, -40), Math.toRadians(-45));
+        TrajectoryActionBuilder dropFirstSample = drive.actionBuilder(new Pose2d(33, -35, Math.toRadians(40)))
+                .strafeToLinearHeading(new Vector2d(40, -32), Math.toRadians(-80));
 
-        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(38, -40, Math.toRadians(-45)))
+        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(40, -32, Math.toRadians(-80)))
                 .turnTo(Math.toRadians(35));
 
-        TrajectoryActionBuilder dropSecondSample = drive.actionBuilder(new Pose2d(38, -40, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(47, -40), Math.toRadians(270));
+        TrajectoryActionBuilder dropSecondSample = drive.actionBuilder(new Pose2d(40, -32, Math.toRadians(35)))
+                .strafeToLinearHeading(new Vector2d(47, -34), Math.toRadians(270));
 
-        TrajectoryActionBuilder getFirstSpecimen = drive.actionBuilder(new Pose2d(-47, -40, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(47, -47.5));
+        TrajectoryActionBuilder slowGetSpecimen = drive.actionBuilder(new Pose2d(47, -34, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(47, -45), new TranslationalVelConstraint(20.0));
 
-        TrajectoryActionBuilder scoreFirstSpecimen = drive.actionBuilder(new Pose2d(47, -47.5, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-5, -29), Math.toRadians(270));
+        TrajectoryActionBuilder scoreFirstSpecimen = drive.actionBuilder(new Pose2d(47, -45, Math.toRadians(270)))
+                .strafeToLinearHeading(new Vector2d(-5, -32), Math.toRadians(270));
 
         TrajectoryActionBuilder getSecondSpecimen = drive.actionBuilder(new Pose2d(0, -28, Math.toRadians(270)))
                 .setReversed(false)
@@ -66,9 +66,6 @@ public class RightSideStarting extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-9, -29), Math.toRadians(270))
                 .strafeToConstantHeading(new Vector2d(5, -28), new TranslationalVelConstraint(20.0));
 
-        TrajectoryActionBuilder getFirstSpecimen = drive.actionBuilder(new Pose2d(-47,-47,Math.toRadians(270)))
-                .strafeTo(new Vector2d(-47,-50));
-
         TrajectoryActionBuilder scoreSpecimen = drive.actionBuilder(new Pose2d(47,-50,Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(0,-36), Math.toRadians(270));
         TrajectoryActionBuilder scoreThirdSpecimen = drive.actionBuilder(new Pose2d(47, -47.5, Math.toRadians(270)))
@@ -78,14 +75,11 @@ public class RightSideStarting extends LinearOpMode {
         TrajectoryActionBuilder Move3Spec = drive.actionBuilder(new Pose2d(-9, -28, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(5, -28), new TranslationalVelConstraint(20.0));
 
-
-
-
         TrajectoryActionBuilder getThirdSpecimen = drive.actionBuilder(new Pose2d(-5, -28, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(47, -42), Math.toRadians(270));
 
-        TrajectoryActionBuilder slowGetSpecimen = drive.actionBuilder(new Pose2d(47, -42, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(47, -47.5), new TranslationalVelConstraint(20.0));
+
+
 
 
         linkage = hardwareMap.get(DcMotor.class, "linkage");
@@ -103,10 +97,12 @@ public class RightSideStarting extends LinearOpMode {
         linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         Actions.runBlocking(
                 new ParallelAction(
                         robot.updatePID(),
                         new SequentialAction(
+                                robot.setElevatorTarget(-20),
                                 //score preloaded
                                 new ParallelAction(
                                         robot.moveRotate(0),
@@ -120,49 +116,50 @@ public class RightSideStarting extends LinearOpMode {
                                 new SleepAction(0.8),
                                 robot.clawOpen(),
 
-                                // get and drop first sample
+                                //pick first sample
+                                robot.servoDown(),
                                 robot.setElevatorTarget(-20),
                                 robot.setLinkageTarget(-200),
                                 new SleepAction(1),
                                 robot.setLinkageTarget(-550),
-                                robot.servoDown(),
-                                new ParallelAction(
-                                        robot.setElevatorTarget(300),
-                                        getFirstSample.build()
-                                ),
-                                new SleepAction(0.8),
+                                getFirstSample.build(),
+                                robot.setElevatorTarget(250),
+                                robot.moveRotate(.15),
+                                robot.servoGet(),
+                                new SleepAction(.5),
                                 robot.clawClose(),
-                                new SleepAction(0.4),
+                                new SleepAction(.5),
+                                robot.servoDown(),
+                                robot.setElevatorTarget(900),
+
+
+                                //drop first sample
                                 dropFirstSample.build(),
                                 robot.clawOpen(),
+                                new SleepAction(.3),
+                                robot.setElevatorTarget(250),
 
-                                // get and drop second sample
-                                robot.setLinkageTarget(-420),
-                                robot.servoSpecimen(),
-                                getThirdSpecimen.build(),
-                                slowGetSpecimen.build(),
+
+                                getSecondSample.build(),
+                                robot.servoGet(),
+                                new SleepAction(.2),
                                 robot.clawClose(),
-                                new SleepAction(0.8),
+                                new SleepAction(.5),
+
+                                robot.servoSpecimen(),
+                                dropSecondSample.build(),
+                                robot.clawOpen(),
+                                robot.moveRotate(0),
+                                new SleepAction(3),
+                                slowGetSpecimen.build(),
+                                new SleepAction(.5),
+                                robot.clawClose(),
+
                                 robot.servoUp(),
-                                new ParallelAction(
-                                        scoreThirdSpecimen.build(),
-                                        robot.servoSpecimenScore(),
-                                        robot.setLinkageTarget(100)
-                                ),
-                                new SleepAction(0.5),
-                                robot.setElevatorTarget(1050),
-                                new SleepAction(0.25),
-                                Move3Spec.build(),
-                                robot.clawOpen()
+                                robot.setLinkageTarget(100),
+                                robot.servoSpecimenScore(),
+                                scoreFirstSpecimen.build()
 
-
-//                        getSecondSample.build(),
-//                        robot.servoGet(),
-//                        robot.clawClose(),
-//                        dropSecondSample.build(),
-//                        robot.setElevatorTarget(-20),
-//                        robot.clawOpen(),
-//                        robot.servoSpecimen(),
 //
 //                        getFirstSpecimen.build(),
 //                        robot.clawClose(),

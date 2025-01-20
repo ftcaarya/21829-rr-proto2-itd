@@ -223,9 +223,6 @@ public class AllMech extends LinearOpMode {
 
             elevator.setPower(vertPower);
             linkage.setPower(linkPower);
-            System.out.println("link target position: " + linkTarget);
-            System.out.println("link current position: " + linkagePos);
-            System.out.println("link power" + linkPower);
 
             return true;
         }

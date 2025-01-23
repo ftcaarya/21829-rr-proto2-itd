@@ -111,50 +111,69 @@ public class RightSideStarting extends LinearOpMode {
                                 new ParallelAction(
                                         robot.moveRotate(0),
                                         robot.setLinkageTarget(100),
-                                        robot.clawClose()
+                                        robot.clawClose(),
+                                        robot.servoSpecimenScore()
+
                                 ),
-                                robot.servoSpecimenScore(),
+
                                 dropPreloaded.build(),
                                 robot.setElevatorTarget(1350),
                                 new SleepAction(.6),
                                 robot.clawOpen(),
 
                                 //pick first sample
-                                robot.servoDown(),
-                                robot.setElevatorTarget(-20),
+                                new ParallelAction(
+                                        robot.servoDown(),
+                                        robot.setElevatorTarget(-20)
+
+                                ),
                                 robot.setLinkageTarget(-200),
                                 new SleepAction(0.3),
-                                robot.setLinkageTarget(-550),
-                                getFirstSample.build(),
-                                robot.setElevatorTarget(250),
-                                robot.moveRotate(.15),
+                                new ParallelAction(
+                                        robot.setLinkageTarget(-550),
+                                        getFirstSample.build(),
+                                        robot.setElevatorTarget(250),
+                                        robot.moveRotate(.15)
+                                ),
+
                                 robot.servoGet(),
                                 new SleepAction(.3),
                                 robot.clawClose(),
                                 new SleepAction(.3),
-                                robot.servoDown(),
-                                robot.setElevatorTarget(900),
+
+                                new ParallelAction(
+                                        robot.servoDown(),
+                                        robot.setElevatorTarget(900),
+                                        dropFirstSample.build()
+
+                                        ),
 
 
                                 //drop first sample
-                                dropFirstSample.build(),
                                 robot.clawOpen(),
                                 new SleepAction(.3),
-                                robot.setElevatorTarget(250),
+                                new ParallelAction(
+                                        robot.setElevatorTarget(250),
 
-                                //get second sample
-                                getSecondSample.build(),
-                                robot.moveRotate(0.17),
+                                        //get second sample
+                                        getSecondSample.build(),
+                                        robot.moveRotate(0.17)
+                                        ),
+
                                 robot.servoGet(),
                                 new SleepAction(.2),
                                 robot.clawClose(),
                                 new SleepAction(.3),
 
                                 //drop second and get first specimen
-                                robot.servoSpecimen(),
-                                dropSecondSample.build(),
+                                new ParallelAction(
+                                        robot.servoSpecimen(),
+                                        robot.moveRotate(0),
+                                        dropSecondSample.build()
+
+                                ),
                                 robot.clawOpen(),
-                                robot.moveRotate(0),
+
                                 slowGetSpecimen.build(),
                                 new SleepAction(.1),
                                 robot.clawClose(),
@@ -164,35 +183,55 @@ public class RightSideStarting extends LinearOpMode {
                                 robot.servoUp(),
                                 robot.setLinkageTarget(-300),
                                 new SleepAction(0.3),
-                                robot.setLinkageTarget(100),
-                                robot.servoSpecimenScore(),
-                                scoreFirstSpecimen.build(),
+
+                                new ParallelAction(
+                                        robot.setLinkageTarget(100),
+                                        robot.servoSpecimenScore(),
+                                        scoreFirstSpecimen.build()
+
+                                ),
                                 robot.setElevatorTarget(1350),
                                 new SleepAction(.8),
                                 robot.clawOpen(),
-                                robot.servoDown(),
+                                new ParallelAction(
+                                        robot.servoDown(),
+                                        robot.setElevatorTarget(-20)
+                                ),
+                                new ParallelAction(
+                                        robot.servoSpecimen(),
+                                        getSecondSpecimen.build(),
+                                        new SequentialAction(
+                                                robot.setLinkageTarget(-250),
+                                                new SleepAction(0.3),
+                                                robot.setLinkageTarget(-550)
+                                        )
 
-                                robot.setElevatorTarget(-20),
+                                ),
+
 
                                 //get second specimen
-                                robot.servoSpecimen(),
-                                getSecondSpecimen.build(),
-                                robot.setLinkageTarget(-250),
-                                new SleepAction(0.3),
-                                robot.setLinkageTarget(-550),
+
+
                                 new SleepAction(0.4),
                                 slowGetSecondSpec.build(),
                                 new SleepAction(0.5),
                                 robot.clawClose(),
                                 new SleepAction(0.5),
+                                robot.servoUp(),
+
 
                                 //score second specimen
-                                robot.servoUp(),
-                                robot.setLinkageTarget(-300),
-                                new SleepAction(0.3),
-                                robot.setLinkageTarget(100),
-                                robot.servoSpecimenScore(),
-                                scoreSecondSpecimen.build(),
+                                new ParallelAction(
+                                        new SequentialAction(
+                                                robot.setLinkageTarget(-300),
+                                                new SleepAction(0.3),
+                                                robot.setLinkageTarget(100)
+
+                                        ),
+                                        robot.servoSpecimenScore(),
+                                        scoreSecondSpecimen.build()
+
+                                ),
                                 robot.setElevatorTarget(1350),
                                 new SleepAction(.8),
                                 moveSpecs.build(),

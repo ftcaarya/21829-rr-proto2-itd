@@ -11,12 +11,17 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,7 @@ public class HardwareTesting extends OpMode {
     ServoProgramming servo;
     AllMech robot;
 
+    MecanumDrive drive;
     Servo servoTesting;
 
     private FtcDashboard dash = FtcDashboard.getInstance();
@@ -41,6 +47,7 @@ public class HardwareTesting extends OpMode {
     public void init() {
         servo = new ServoProgramming(hardwareMap);
         robot = new AllMech(hardwareMap);
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
         servoTesting = hardwareMap.get(Servo.class, "testing");
 
@@ -59,6 +66,7 @@ public class HardwareTesting extends OpMode {
 
     @Override
     public void loop() {
+
         EnhancedBooleanSupplier aButton = Pasteurized.gamepad1().a();
         EnhancedBooleanSupplier bButton = Pasteurized.gamepad1().b();
         EnhancedBooleanSupplier xButton = Pasteurized.gamepad1().x();
@@ -66,6 +74,16 @@ public class HardwareTesting extends OpMode {
         EnhancedBooleanSupplier leftBumper = Pasteurized.gamepad1().leftBumper();
 
         TelemetryPacket packet = new TelemetryPacket();
+
+        drive.setDrivePowers(new PoseVelocity2d(
+                new Vector2d(
+                        -gamepad1.left_stick_y,
+                        -gamepad1.left_stick_x
+                ),
+                -gamepad1.right_stick_x
+        ));
+
+        drive.updatePoseEstimate();
 
         if (aButton.onTrue()) {
             specCounter++;

@@ -128,14 +128,14 @@ public class RightSideStarting extends LinearOpMode {
 
                                 ),
                                 robot.setLinkageTarget(-200),
-                                new SleepAction(0.3),
+
+                                new SleepAction(0.5),
                                 new ParallelAction(
                                         robot.setLinkageTarget(-550),
                                         getFirstSample.build(),
                                         robot.setElevatorTarget(250),
                                         robot.moveRotate(.15)
                                 ),
-
                                 robot.servoGet(),
                                 new SleepAction(.3),
                                 robot.clawClose(),
@@ -210,8 +210,11 @@ public class RightSideStarting extends LinearOpMode {
 
 
                                 //get second specimen
-
-
+                                robot.servoSpecimen(),
+                                getSecondSpecimen.build(),
+                                robot.setLinkageTarget(-250),
+                                new SleepAction(0.5),
+                                robot.setLinkageTarget(-550),
                                 new SleepAction(0.4),
                                 slowGetSecondSpec.build(),
                                 new SleepAction(0.5),

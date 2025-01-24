@@ -77,8 +77,8 @@ public class HardwareTesting extends OpMode {
 
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        -gamepad1.left_stick_y,
-                        -gamepad1.left_stick_x
+                        (-gamepad1.left_stick_y * 0.7),
+                        (-gamepad1.left_stick_x * 0.7)
                 ),
                 -gamepad1.right_stick_x
         ));
@@ -103,11 +103,12 @@ public class HardwareTesting extends OpMode {
 
         if (bButton.state()) {
             runningActions.add(new ParallelAction(
-                    robot.setElevatorTarget(-20),
+                    robot.setElevatorTarget(0),
                     robot.setLinkageTarget(100),
                     robot.servoDown(),
                     robot.clawOpen()
             ));
+
         }
 
         if (sampleCounter == 0) {
@@ -117,7 +118,7 @@ public class HardwareTesting extends OpMode {
                                     robot.servoDown(),
                                     robot.clawOpen()
                             ),
-                            robot.setElevatorTarget(-20),
+                            robot.setElevatorTarget(0),
                             robot.setLinkageTarget(-550)
                     )
             );
@@ -134,7 +135,7 @@ public class HardwareTesting extends OpMode {
         if (sampleCounter == 2) {
             runningActions.add(
                     new SequentialAction(
-                            robot.setElevatorTarget(-20)
+                            robot.setElevatorTarget(0)
                     )
             );
         }
@@ -162,6 +163,7 @@ public class HardwareTesting extends OpMode {
         if (rightBumper.state()) {
             runningActions.add(
                     new SequentialAction(
+                            robot.clawOpen(),
                             robot.servoGet(),
                             new SleepAction(0.3),
                             robot.clawClose(),
@@ -174,7 +176,7 @@ public class HardwareTesting extends OpMode {
         if (specCounter == 0) {
             runningActions.add(
                     new SequentialAction(
-                            robot.setElevatorTarget(-20),
+                            robot.setElevatorTarget(0),
                             new ParallelAction(
                                     robot.servoSpecimen(),
                                     robot.clawOpen()

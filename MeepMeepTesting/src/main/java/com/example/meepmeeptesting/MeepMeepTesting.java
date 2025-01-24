@@ -77,39 +77,40 @@ public class MeepMeepTesting {
 //                .strafeToLinearHeading(new Vector2d(36,-56.5),Math.toRadians(0))
 //                .build());
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(10, -66, Math.toRadians(270)))
-                //drop preloaded
-                .strafeToLinearHeading(new Vector2d(0, -31), Math.toRadians(270))
-                // get first sample
-                .setReversed(false)
-                .splineToSplineHeading(new Pose2d(33, -38, Math.toRadians(40)), Math.toRadians(45))
-                // drop first sample
-                .strafeToLinearHeading(new Vector2d(38, -40), Math.toRadians(-45))
-                // get second sample
-                .turnTo(Math.toRadians(35))
-                // drop second sample
-                .strafeToLinearHeading(new Vector2d(47, -40), Math.toRadians(270))
-                // pick specimen 1
-                .strafeToConstantHeading(new Vector2d(47, -47.5))
-                //drop specimen 1
-                .strafeToLinearHeading(new Vector2d(-5, -29), Math.toRadians(270))
-                //pick specimen 2
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(47, -42, Math.toRadians(270)), Math.PI/9)
-                .strafeToConstantHeading(new Vector2d(47, -47.5), new TranslationalVelConstraint(20.0))
-                //drop specimen 2
-                .strafeToLinearHeading(new Vector2d(-9, -29), Math.toRadians(270))
-                .strafeToConstantHeading(new Vector2d(5, -28), new TranslationalVelConstraint(20.0))
-                        .build());
-//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-10, -66, Math.toRadians(90)))
-//                        .setReversed(false)
-//                        .splineToLinearHeading(new Pose2d(-54,-54,Math.toRadians(45)), -Math.toRadians(180))
-//                        .strafeToLinearHeading(new Vector2d(-48,-40),Math.toRadians(90))
-//                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
-//                        .strafeToLinearHeading(new Vector2d(-58,-40),Math.toRadians(90))
-//                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
-//                        .strafeToLinearHeading(new Vector2d(-58,-40),Math.toRadians(135))
-//                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(10, -66, Math.toRadians(270)))
+//                //drop preloaded
+//                .strafeToLinearHeading(new Vector2d(0, -31), Math.toRadians(270))
+//                // get first sample
+//                .setReversed(false)
+//                .splineToSplineHeading(new Pose2d(33, -38, Math.toRadians(40)), Math.toRadians(45))
+//                // drop first sample
+//                .strafeToLinearHeading(new Vector2d(38, -40), Math.toRadians(-45))
+//                // get second sample
+//                .turnTo(Math.toRadians(35))
+//                // drop second sample
+//                .strafeToLinearHeading(new Vector2d(47, -40), Math.toRadians(270))
+//                // pick specimen 1
+//                .strafeToConstantHeading(new Vector2d(47, -47.5))
+//                //drop specimen 1
+//                .strafeToLinearHeading(new Vector2d(-5, -29), Math.toRadians(270))
+//                //pick specimen 2
+//                .setReversed(false)
+//                .splineToLinearHeading(new Pose2d(47, -42, Math.toRadians(270)), Math.PI/9)
+//                .strafeToConstantHeading(new Vector2d(47, -47.5), new TranslationalVelConstraint(20.0))
+//                //drop specimen 2
+//                .strafeToLinearHeading(new Vector2d(-9, -29), Math.toRadians(270))
+//                .strafeToConstantHeading(new Vector2d(5, -28), new TranslationalVelConstraint(20.0))
+//                        .build());
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-10, -66, Math.toRadians(90)))
+                        .setReversed(false)
+                        .splineToLinearHeading(new Pose2d(-54,-54,Math.toRadians(45)), -Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-48,-40),Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+                        .strafeToLinearHeading(new Vector2d(-58,-40),Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+                        .strafeToLinearHeading(new Vector2d(-58,-40),Math.toRadians(135))
+                        .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45))
+                                .build());
 //
 //                myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, -32.5, Math.toRadians(270)))
 //                                .strafeTo(new Vector2d(33,-35))

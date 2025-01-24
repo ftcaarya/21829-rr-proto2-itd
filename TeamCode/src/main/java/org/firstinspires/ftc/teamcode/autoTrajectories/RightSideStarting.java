@@ -36,16 +36,16 @@ public class RightSideStarting extends LinearOpMode {
         servo = new ServoProgramming(hardwareMap);
 
         TrajectoryActionBuilder dropPreloaded = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(0, -32.5), Math.toRadians(270));
+                .strafeToLinearHeading(new Vector2d(0, -30), Math.toRadians(270));
 
-        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(0, -32.5, Math.toRadians(270)))
+        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(0, -30, Math.toRadians(270)))
                 .setReversed(false)
-                .splineToLinearHeading(new Pose2d(32, -34, Math.toRadians(42)), Math.toRadians(45));
+                .splineToLinearHeading(new Pose2d(34, -35.5, Math.toRadians(42)), Math.toRadians(45));
 
-        TrajectoryActionBuilder dropFirstSample = drive.actionBuilder(new Pose2d(32, -34, Math.toRadians(42)))
-                .strafeToLinearHeading(new Vector2d(39, -30.5), Math.toRadians(-80));
+        TrajectoryActionBuilder dropFirstSample = drive.actionBuilder(new Pose2d(34, -35.5, Math.toRadians(42)))
+                .strafeToLinearHeading(new Vector2d(39, -31), Math.toRadians(-80), new TranslationalVelConstraint(20), new ProfileAccelConstraint(-20, 20));
 
-        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(39, -30.5, Math.toRadians(-80)))
+        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(39, -31, Math.toRadians(-80)))
                 .turnTo(Math.toRadians(35));
 
         TrajectoryActionBuilder dropSecondSample = drive.actionBuilder(new Pose2d(40, -32, Math.toRadians(35)))
@@ -140,13 +140,9 @@ public class RightSideStarting extends LinearOpMode {
                                 new SleepAction(.3),
                                 robot.clawClose(),
                                 new SleepAction(.3),
-
-                                new ParallelAction(
-                                        robot.servoDown(),
-                                        robot.setElevatorTarget(900),
-                                        dropFirstSample.build()
-
-                                        ),
+                                robot.servoDown(),
+                                dropFirstSample.build(),
+                                robot.setElevatorTarget(900),
 
 
                                 //drop first sample

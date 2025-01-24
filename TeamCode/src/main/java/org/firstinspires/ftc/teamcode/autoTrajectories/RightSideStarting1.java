@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.extraneous.AllMech;
 import org.firstinspires.ftc.teamcode.extraneous.ServoProgramming;
 
-@Autonomous(name = "Right Side Starting Trajectory", group = "exercises")
+@Autonomous(name = "Right Side push", group = "exercises")
 public class RightSideStarting1 extends LinearOpMode {
 
     AllMech robot;

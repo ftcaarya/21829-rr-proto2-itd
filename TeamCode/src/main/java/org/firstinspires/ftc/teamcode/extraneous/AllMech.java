@@ -129,8 +129,8 @@ public class AllMech extends LinearOpMode {
     public Action servoGet(){
 
         return new ParallelAction(
-                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+0.18)),
-                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.18)),
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_DOWN+.4)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_DOWN-0.08)),
 
                 new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_DOWN-0.07))
         );

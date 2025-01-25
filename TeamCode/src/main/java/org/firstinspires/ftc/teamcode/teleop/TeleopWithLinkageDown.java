@@ -25,8 +25,8 @@ import java.util.List;
 import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier;
 import dev.frozenmilk.dairy.pasteurized.Pasteurized;
 
-@TeleOp(name = "Teleop avec l'actions trois", group = "Examples")
-public class TeleopWithActions extends OpMode {
+@TeleOp(name = "Teleop avec l'actions trois Linkage Down", group = "Examples")
+public class TeleopWithLinkageDown extends OpMode {
     AllMech robot;
     ServoProgramming servo;
     Gamepad currentGamepad1;
@@ -70,7 +70,7 @@ public class TeleopWithActions extends OpMode {
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
-                        robot.setLinkageTarget(100)
+                        robot.setLinkageTarget(550)
                 )
 
         );
@@ -149,7 +149,7 @@ public class TeleopWithActions extends OpMode {
                                     robot.servoSpecimen(),
                                     robot.clawOpen()
                             ),
-                            robot.setLinkageTarget(-550)
+                            robot.setLinkageTarget(0)
                     ));
         }
 
@@ -160,7 +160,7 @@ public class TeleopWithActions extends OpMode {
                             new SleepAction(0.2),
                             new ParallelAction(
                                     robot.servoUp(),
-                                    robot.setLinkageTarget(100)
+                                    robot.setLinkageTarget(550)
                             )
                     ));
         }
@@ -220,7 +220,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(0)
+                            robot.setLinkageTarget(550)
                     )
 
 
@@ -229,7 +229,7 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad2.dpad_right) {
             runningActions.add(
-                    robot.setLinkageTarget(-550)
+                    robot.setLinkageTarget(0)
             );
         }
 

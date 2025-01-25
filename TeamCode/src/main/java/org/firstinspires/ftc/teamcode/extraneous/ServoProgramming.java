@@ -23,7 +23,7 @@ public class ServoProgramming {
 
     public static final double LEFT_ARM_SERVO_UP = .54;//.54
     public static final double LEFT_ARM_SERVO_DOWN = .48;//.44
-    public static final double LEFT_ARM_SERVO_SPEC = .5;//.48
+    public static final double LEFT_ARM_SERVO_SPEC = .51;//.48
 
     public static final double LEFT_ARM_SERVO_SCORE = .32;//.32
 

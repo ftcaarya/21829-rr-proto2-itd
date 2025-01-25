@@ -60,32 +60,18 @@ public class RightSideStarting extends LinearOpMode {
         TrajectoryActionBuilder scoreFirstSpecimen = drive.actionBuilder(new Pose2d(47, -43.5, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(-7, -30.7), Math.toRadians(270),new TranslationalVelConstraint(100));
 
-        TrajectoryActionBuilder getSecondSpecimen = drive.actionBuilder(new Pose2d(-7, -32, Math.toRadians(270)))
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(47, -39, Math.toRadians(270)), Math.PI/9);
 
         TrajectoryActionBuilder getSecondSpecimenstrafe = drive.actionBuilder(new Pose2d(-7, -32, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(47, -39),Math.toRadians(270),new TranslationalVelConstraint(100));
 
-        TrajectoryActionBuilder slowGetSecondSpec = drive.actionBuilder(new Pose2d(47, -39, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(47, -48), new TranslationalVelConstraint(15.0));
         TrajectoryActionBuilder slowGetSecondSpecNoVel = drive.actionBuilder(new Pose2d(47, -39, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(47, -48.5));
-        TrajectoryActionBuilder scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -48.5, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-9, -29.7), Math.toRadians(270),new TranslationalVelConstraint(100));
-        TrajectoryActionBuilder slowGetThirdSpec = drive.actionBuilder(new Pose2d(47, -39, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(47, -47));
-        TrajectoryActionBuilder moveSpecs = drive.actionBuilder(new Pose2d(-9, -31, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(5, -31));
 
-        TrajectoryActionBuilder scoreSpecimen = drive.actionBuilder(new Pose2d(47,-50,Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(0,-36), Math.toRadians(270));
+        TrajectoryActionBuilder scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -47, Math.toRadians(270)))
+                .strafeToLinearHeading(new Vector2d(-9, -29.7), Math.toRadians(270),new TranslationalVelConstraint(100));
+
         TrajectoryActionBuilder scoreThirdSpecimen = drive.actionBuilder(new Pose2d(47, -47, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(5, -29.7), Math.toRadians(270));
-
-
-        TrajectoryActionBuilder Move3Spec = drive.actionBuilder(new Pose2d(-9, -28, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(5, -28), new TranslationalVelConstraint(20.0));
 
         TrajectoryActionBuilder getThirdSpecimen = drive.actionBuilder(new Pose2d(5, -31, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(47, -46), Math.toRadians(270));

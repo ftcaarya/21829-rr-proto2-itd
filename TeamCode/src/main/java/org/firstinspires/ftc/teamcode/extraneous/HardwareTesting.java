@@ -71,14 +71,14 @@ public class HardwareTesting extends OpMode {
         EnhancedBooleanSupplier bButton = Pasteurized.gamepad1().b();
         EnhancedBooleanSupplier xButton = Pasteurized.gamepad1().x();
         EnhancedBooleanSupplier rightBumper = Pasteurized.gamepad1().rightBumper();
-        EnhancedBooleanSupplier leftBumper = Pasteurized.gamepad1().leftBumper();
+        EnhancedBooleanSupplier start = Pasteurized.gamepad1().start();
 
         TelemetryPacket packet = new TelemetryPacket();
 
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        -gamepad1.left_stick_y,
-                        -gamepad1.left_stick_x
+                        (-gamepad1.left_stick_y * 0.8),
+                        (-gamepad1.left_stick_x * 0.8)
                 ),
                 -gamepad1.right_stick_x
         ));
@@ -93,11 +93,11 @@ public class HardwareTesting extends OpMode {
             sampleCounter++;
         }
 
-        if (specCounter > 3) {
+        if (specCounter > 3 || start.state()) {
             specCounter = 0;
         }
 
-        if (sampleCounter > 4) {
+        if (sampleCounter > 4 || start.state()) {
             sampleCounter = 0;
         }
 
@@ -199,7 +199,7 @@ public class HardwareTesting extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoSpecimenScore(),
-                            robot.setElevatorTarget(1000)
+                            robot.setElevatorTarget(600)
                     )
             );
         }

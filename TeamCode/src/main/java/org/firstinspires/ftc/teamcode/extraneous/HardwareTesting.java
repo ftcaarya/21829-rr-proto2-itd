@@ -71,14 +71,14 @@ public class HardwareTesting extends OpMode {
         EnhancedBooleanSupplier bButton = Pasteurized.gamepad1().b();
         EnhancedBooleanSupplier xButton = Pasteurized.gamepad1().x();
         EnhancedBooleanSupplier rightBumper = Pasteurized.gamepad1().rightBumper();
-        EnhancedBooleanSupplier leftBumper = Pasteurized.gamepad1().leftBumper();
+        EnhancedBooleanSupplier start = Pasteurized.gamepad1().start();
 
         TelemetryPacket packet = new TelemetryPacket();
 
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        (-gamepad1.left_stick_y * 0.7),
-                        (-gamepad1.left_stick_x * 0.7)
+                        (-gamepad1.left_stick_y * 0.8),
+                        (-gamepad1.left_stick_x * 0.8)
                 ),
                 -gamepad1.right_stick_x
         ));
@@ -93,22 +93,21 @@ public class HardwareTesting extends OpMode {
             sampleCounter++;
         }
 
-        if (specCounter > 3) {
+        if (specCounter > 3 || start.state()) {
             specCounter = 0;
         }
 
-        if (sampleCounter > 4) {
+        if (sampleCounter > 4 || start.state()) {
             sampleCounter = 0;
         }
 
         if (bButton.state()) {
             runningActions.add(new ParallelAction(
-                    robot.setElevatorTarget(0),
+                    robot.setElevatorTarget(-20),
                     robot.setLinkageTarget(100),
                     robot.servoDown(),
                     robot.clawOpen()
             ));
-
         }
 
         if (sampleCounter == 0) {
@@ -118,7 +117,7 @@ public class HardwareTesting extends OpMode {
                                     robot.servoDown(),
                                     robot.clawOpen()
                             ),
-                            robot.setElevatorTarget(0),
+                            robot.setElevatorTarget(-20),
                             robot.setLinkageTarget(-550)
                     )
             );
@@ -135,7 +134,7 @@ public class HardwareTesting extends OpMode {
         if (sampleCounter == 2) {
             runningActions.add(
                     new SequentialAction(
-                            robot.setElevatorTarget(0)
+                            robot.setElevatorTarget(-20)
                     )
             );
         }
@@ -163,7 +162,6 @@ public class HardwareTesting extends OpMode {
         if (rightBumper.state()) {
             runningActions.add(
                     new SequentialAction(
-                            robot.clawOpen(),
                             robot.servoGet(),
                             new SleepAction(0.3),
                             robot.clawClose(),
@@ -176,7 +174,7 @@ public class HardwareTesting extends OpMode {
         if (specCounter == 0) {
             runningActions.add(
                     new SequentialAction(
-                            robot.setElevatorTarget(0),
+                            robot.setElevatorTarget(-20),
                             new ParallelAction(
                                     robot.servoSpecimen(),
                                     robot.clawOpen()
@@ -201,7 +199,7 @@ public class HardwareTesting extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoSpecimenScore(),
-                            robot.setElevatorTarget(1000)
+                            robot.setElevatorTarget(600)
                     )
             );
         }

@@ -21,6 +21,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -170,6 +172,37 @@ public class AllMech extends LinearOpMode {
 
     public Action setLinkageTarget(int target) {
         return new InstantAction(() -> linkTarget = target);
+    }
+
+    public Action scoreSample() {
+        return new SequentialAction(
+                setElevatorTarget(2500),
+                new SleepAction(0.2),
+                servoUp(),
+                clawOpen()
+        );
+    }
+
+    public Action pickUpSample() {
+        return new SequentialAction(
+                servoGet(),
+                clawClose(),
+                new ParallelAction(
+                        servoUp(),
+                        setLinkageTarget(100)
+                )
+        );
+    }
+
+    public Action resetMechs() {
+        return new SequentialAction(
+                servoDown(),
+                new SleepAction(0.3),
+                setElevatorTarget(0),
+                new InstantAction(() -> linkTarget = -250),
+                new SleepAction(0.5),
+                new InstantAction(() -> linkTarget = -550)
+        );
     }
 
     public Action setElevatorTarget(int target) {

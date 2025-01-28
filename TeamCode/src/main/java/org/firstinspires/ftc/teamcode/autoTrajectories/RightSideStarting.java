@@ -36,19 +36,19 @@ public class RightSideStarting extends LinearOpMode {
         servo = new ServoProgramming(hardwareMap);
 
         TrajectoryActionBuilder dropPreloaded = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(0, -30.8), Math.toRadians(270));
+                .strafeToLinearHeading(new Vector2d(0, -32), Math.toRadians(270));
 
-        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(0, -30.8, Math.toRadians(270)))
+        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(0, -32, Math.toRadians(270)))
                 .setReversed(false)
-                .splineToLinearHeading(new Pose2d(34, -35.5, Math.toRadians(42)), Math.toRadians(45));
+                .splineToLinearHeading(new Pose2d(33, -35.5, Math.toRadians(42)), Math.toRadians(45));
 
-        TrajectoryActionBuilder dropFirstSample = drive.actionBuilder(new Pose2d(34, -35.5, Math.toRadians(42)))
-                .strafeToLinearHeading(new Vector2d(40, -32), Math.toRadians(-80), new TranslationalVelConstraint(20), new ProfileAccelConstraint(-20, 20));
+        TrajectoryActionBuilder dropFirstSample = drive.actionBuilder(new Pose2d(33, -35.5, Math.toRadians(42)))
+                .strafeToLinearHeading(new Vector2d(39, -32), Math.toRadians(-80), new TranslationalVelConstraint(20), new ProfileAccelConstraint(-20, 20));
 
-        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(40, -32, Math.toRadians(-80)))
+        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(39, -32, Math.toRadians(-80)))
                 .turnTo(Math.toRadians(35));
 
-        TrajectoryActionBuilder dropSecondSample = drive.actionBuilder(new Pose2d(40, -32, Math.toRadians(35)))
+        TrajectoryActionBuilder dropSecondSample = drive.actionBuilder(new Pose2d(39, -32, Math.toRadians(35)))
                 .strafeToLinearHeading(new Vector2d(47, -34), Math.toRadians(270));
 
         TrajectoryActionBuilder slowGetSpecimen = drive.actionBuilder(new Pose2d(47, -34, Math.toRadians(270)))
@@ -58,22 +58,22 @@ public class RightSideStarting extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(47, -45));
 
         TrajectoryActionBuilder scoreFirstSpecimen = drive.actionBuilder(new Pose2d(47, -45, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-7, -30.7), Math.toRadians(270),new TranslationalVelConstraint(100));
+                .strafeToConstantHeading(new Vector2d(-9, -32));
 
 
-        TrajectoryActionBuilder getSecondSpecimenstrafe = drive.actionBuilder(new Pose2d(-7, -32, Math.toRadians(270)))
+        TrajectoryActionBuilder getSecondSpecimenstrafe = drive.actionBuilder(new Pose2d(-9, -32, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(47, -39),Math.toRadians(270),new TranslationalVelConstraint(100));
 
         TrajectoryActionBuilder slowGetSecondSpecNoVel = drive.actionBuilder(new Pose2d(47, -39, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(47, -47));
+                .strafeToConstantHeading(new Vector2d(47, -45.5));
 
-        TrajectoryActionBuilder scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -47, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-9, -29.4), Math.toRadians(270),new TranslationalVelConstraint(100));
+        TrajectoryActionBuilder scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -45.5, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(-6, -32),new TranslationalVelConstraint(80));
 
         TrajectoryActionBuilder scoreThirdSpecimen = drive.actionBuilder(new Pose2d(47, -46, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(5, -29.7), Math.toRadians(270));
+                .strafeToConstantHeading(new Vector2d(5, -32));
 
-        TrajectoryActionBuilder getThirdSpecimen = drive.actionBuilder(new Pose2d(5, -30.7, Math.toRadians(270)))
+        TrajectoryActionBuilder getThirdSpecimen = drive.actionBuilder(new Pose2d(-6, -30, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(47, -46), Math.toRadians(270));
 
 
@@ -112,7 +112,7 @@ public class RightSideStarting extends LinearOpMode {
 
                                 dropPreloaded.build(),
                                 robot.setElevatorTarget(1700),
-                                new SleepAction(.6),
+                                new SleepAction(.8),
                                 robot.clawOpen(),
 
                                 //pick first sample
@@ -149,7 +149,7 @@ public class RightSideStarting extends LinearOpMode {
                                         //get second sample
                                         getSecondSample.build(),
                                         robot.moveRotate(0.22)
-                                        ),
+                                ),
 
                                 robot.servoGet(),
                                 new SleepAction(.15),
@@ -171,19 +171,20 @@ public class RightSideStarting extends LinearOpMode {
                                 new SleepAction(0.3),
 
                                 //score first specimen
-                                robot.servoUp(),
-                                new SleepAction(0.1),
-                                robot.setLinkageTarget(-300),
-                                new SleepAction(0.3),
+                                new ParallelAction(
+                                        robot.servoUp(),
+                                        robot.setLinkageTarget(100)
+                                ),
+                                new SleepAction(0.5),
+
 
                                 new ParallelAction(
-                                        robot.setLinkageTarget(100),
                                         robot.servoSpecimenScore(),
                                         scoreFirstSpecimen.build()
 
                                 ),
                                 robot.setElevatorTarget(1700),
-                                new SleepAction(.6),
+                                new SleepAction(.7),
                                 robot.clawOpen(),
                                 new ParallelAction(
                                         robot.servoDown(),
@@ -212,24 +213,19 @@ public class RightSideStarting extends LinearOpMode {
                                 new SleepAction(0.1),
 
 
+                                robot.setLinkageTarget(100),
+                                new SleepAction(0.5),
                                 //score second specimen
                                 new ParallelAction(
-                                        new SequentialAction(
-                                                robot.setLinkageTarget(-300),
-                                                new SleepAction(0.3),
-                                                robot.setLinkageTarget(100)
-
-                                        ),
                                         robot.servoSpecimenScore(),
                                         scoreSecondSpecimen.build()
-
                                 ),
                                 robot.setElevatorTarget(1700),
-                                new SleepAction(0.6),
+                                new SleepAction(0.8),
                                 robot.clawOpen(),
 
 
-                               // reset from scoring
+                                // reset from scoring
                                 new ParallelAction(
                                         robot.servoDown(),
                                         robot.setElevatorTarget(0)
@@ -244,81 +240,26 @@ public class RightSideStarting extends LinearOpMode {
                                                 robot.setLinkageTarget(-550)
                                         )
 
-                                ),
+                                )
                                 //get third specimen
-                                new SleepAction(0.1),
-                                robot.clawClose(),
-                                new SleepAction(0.2),
-                                robot.servoUp(),
-                                new SleepAction(0.1),
-
-
-                                //score third specimen
-                                new ParallelAction(
-                                        new SequentialAction(
-                                                robot.setLinkageTarget(-300),
-                                                new SleepAction(0.5),
-                                                robot.setLinkageTarget(100)
-
-                                        ),
-                                        robot.servoSpecimenScore(),
-                                        scoreThirdSpecimen.build()
-
-                                ),
-                                robot.setElevatorTarget(1700),
-                                new SleepAction(.8),
-                                robot.clawOpen()
-
-
-
+//                                new SleepAction(0.1),
+//                                robot.clawClose(),
+//                                new SleepAction(0.2),
+//                                robot.servoUp(),
+//                                new SleepAction(0.1),
 //
-//                        getFirstSpecimen.build(),
-//                        robot.clawClose(),
-//                        robot.servoUp(),
-//                        robot.setLinkageTarget(550),
-//                        robot.servoSpecimenScore(),
-//                        scoreSpecimen.build(),
-//                        robot.setElevatorTarget(1100),
-//                        new SleepAction(0.25),
-//                        robot.clawOpen(),
-//                        robot.servoSpecimen(),
-//                        robot.setLinkageTarget(0),
 //
-//                        getSpecimen.build(),
-//                        robot.clawClose(),
-//                        robot.servoUp(),
-//                        robot.setLinkageTarget(550),
-//                        robot.servoSpecimenScore(),
-//                        scoreSpecimen.build(),
-//                        robot.setElevatorTarget(1100),
-//                        new SleepAction(0.25),
-//                        robot.clawOpen(),
-//                        robot.servoSpecimen(),
-//                        robot.setLinkageTarget(0),
+//                                //score third specimen
+//                                robot.setLinkageTarget(100),
+//                                new SleepAction(0.3),
+//                                new ParallelAction(
+//                                        robot.servoSpecimenScore(),
+//                                        scoreThirdSpecimen.build()
 //
-//                        getSpecimen.build(),
-//                        robot.clawClose(),
-//                        robot.servoUp(),
-//                        robot.setLinkageTarget(550),
-//                        robot.servoSpecimenScore(),
-//                        scoreSpecimen.build(),
-//                        robot.setElevatorTarget(1100),
-//                        new SleepAction(0.25),
-//                        robot.clawOpen(),
-//                        robot.servoSpecimen(),
-//                        robot.setLinkageTarget(0),
-//
-//                        getSpecimen.build(),
-//                        robot.clawClose(),
-//                        robot.servoUp(),
-//                        robot.setLinkageTarget(550),
-//                        robot.servoSpecimenScore(),
-//                        scoreSpecimen.build(),
-//                        robot.setElevatorTarget(1100),
-//                        new SleepAction(0.25),
-//                        robot.clawOpen(),
-//                        robot.servoSpecimen(),
-//                        robot.setLinkageTarget(0)
+//                                ),
+//                                robot.setElevatorTarget(1700),
+//                                new SleepAction(.7),
+//                                robot.clawOpen()
                         )
                 )
 

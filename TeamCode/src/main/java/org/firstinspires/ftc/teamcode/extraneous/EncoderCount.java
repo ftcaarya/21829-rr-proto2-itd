@@ -23,8 +23,8 @@ public class EncoderCount extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("linkage position", linkage.getCurrentPosition());
-        telemetry.addData("elevator position", elevator.getCurrrentPosition());
+        telemetry.addData("elevator position", elevator.getCurrentPosition());
 
-        telemetry.update()
+        telemetry.update();
     }
 }

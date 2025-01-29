@@ -76,7 +76,7 @@ public class PIDSecondPrototype extends OpMode {
         double linkPower = linkagePID + linkFF;
         double hangPower = hangingPID + hangFF;
 
-        handing.setPower(hangPower);
+        hanging.setPower(hangPower);
         elevator.setPower(vertPower);
         linkage.setPower(linkPower);
 

@@ -100,7 +100,7 @@ public class RightSideStarting extends LinearOpMode {
                 new ParallelAction(
                         robot.updatePID(),
                         new SequentialAction(
-                                robot.setElevatorTarget(0),
+                                robot.setElevatorTarget(320),
                                 //score preloaded
                                 new ParallelAction(
                                         robot.moveRotate(0),
@@ -180,7 +180,8 @@ public class RightSideStarting extends LinearOpMode {
 
                                 new ParallelAction(
                                         robot.servoSpecimenScore(),
-                                        scoreFirstSpecimen.build()
+                                        scoreFirstSpecimen.build(),
+                                        robot.setElevatorTarget(320)
 
                                 ),
                                 robot.setElevatorTarget(1700),
@@ -218,6 +219,7 @@ public class RightSideStarting extends LinearOpMode {
                                 //score second specimen
                                 new ParallelAction(
                                         robot.servoSpecimenScore(),
+                                        robot.setElevatorTarget(320),
                                         scoreSecondSpecimen.build()
                                 ),
                                 robot.setElevatorTarget(1700),

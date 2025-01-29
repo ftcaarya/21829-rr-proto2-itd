@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autoTrajectories;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
@@ -38,33 +39,41 @@ public class LeftSideStarting extends LinearOpMode {
         robot = new AllMech(hardwareMap);
         servo = new ServoProgramming(hardwareMap);
 
-        TrajectoryActionBuilder dropPreloaded = drive.actionBuilder(initialPose)
+        Action dropPreloaded = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineToLinearHeading(new Pose2d(-52, -52 , Math.toRadians(45)), -Math.PI);
+                .splineToLinearHeading(new Pose2d(-52, -52 , Math.toRadians(45)), -Math.PI)
+                .build();
 
-        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(-52,-52, -Math.PI))
-                .strafeToLinearHeading(new Vector2d(-48, -52), Math.toRadians(90));
+        Action getSecondSample = drive.actionBuilder(new Pose2d(-52,-52, -Math.PI))
+                .strafeToLinearHeading(new Vector2d(-48, -52), Math.toRadians(90))
+                .build();
 
 
-        TrajectoryActionBuilder scoreSecondSample = drive.actionBuilder(new Pose2d(-48,-52, Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45));
+        Action scoreSecondSample = drive.actionBuilder(new Pose2d(-48,-52, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
+                .build();
 
-        TrajectoryActionBuilder getThirdSample = drive.actionBuilder(new Pose2d(-52,-52, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-58, -52), Math.toRadians(90));
+        Action getThirdSample = drive.actionBuilder(new Pose2d(-52,-52, Math.toRadians(45)))
+                .strafeToLinearHeading(new Vector2d(-58, -52), Math.toRadians(90))
+                .build();
 
-        TrajectoryActionBuilder scoreThirdSample = drive.actionBuilder(new Pose2d(-58,-52, Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45));
+        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-58,-52, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
+                .build();
 
-        TrajectoryActionBuilder getFourthSample = drive.actionBuilder(new Pose2d(-52,-52, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-54, -44), (Math.PI - Math.atan((18/14.5))));
+        Action getFourthSample = drive.actionBuilder(new Pose2d(-52,-52, Math.toRadians(45)))
+                .strafeToLinearHeading(new Vector2d(-54, -44), (Math.PI - Math.atan((18/14.5))))
+                .build();
 
-        TrajectoryActionBuilder scoreFourthSample = drive.actionBuilder(new Pose2d(-54,-44, (Math.PI - Math.atan((18/14.5)))))
-                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45));
+        Action scoreFourthSample = drive.actionBuilder(new Pose2d(-54,-44, (Math.PI - Math.atan((18/14.5)))))
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
+                .build();
 
-        TrajectoryActionBuilder levelOneAscent = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
+        Action levelOneAscent = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
                 .setReversed(false)
                 .splineToSplineHeading(new Pose2d(-24, -8, Math.toRadians(180)), Math.PI/10)
-                .stopAndAdd(robot.servoUp());
+                .stopAndAdd(robot.servoUp())
+                .build();
 
         linkage = hardwareMap.get(DcMotor.class, "linkage");
         elevator = hardwareMap.get(DcMotor.class, "elevator");
@@ -94,7 +103,7 @@ public class LeftSideStarting extends LinearOpMode {
                                 ),
 
                                 //position to drop preloaded
-                                dropPreloaded.build(),
+                                dropPreloaded,
 
                                 //drop preloaded
                                 robot.scoreSample(),
@@ -104,7 +113,7 @@ public class LeftSideStarting extends LinearOpMode {
 
                                 //position to pick up second sample
                                 new ParallelAction(
-                                        getSecondSample.build(),
+                                        getSecondSample,
                                         robot.setElevatorTarget(550)
                                 ),
 
@@ -112,7 +121,7 @@ public class LeftSideStarting extends LinearOpMode {
                                 robot.pickUpSample(),
 
                                 //position to score second sample
-                                scoreSecondSample.build(),
+                                scoreSecondSample,
 
                                 //score second sample
                                 robot.scoreSample(),
@@ -122,7 +131,7 @@ public class LeftSideStarting extends LinearOpMode {
 
                                 //position to pick up third sample
                                 new ParallelAction(
-                                        getThirdSample.build(),
+                                        getThirdSample,
                                         robot.setElevatorTarget(550)
                                 ),
 
@@ -130,7 +139,7 @@ public class LeftSideStarting extends LinearOpMode {
                                 robot.pickUpSample(),
 
                                 //position to score third sample
-                                scoreThirdSample.build(),
+                                scoreThirdSample,
 
                                 //score third sample
                                 robot.scoreSample(),
@@ -140,7 +149,7 @@ public class LeftSideStarting extends LinearOpMode {
 
                                 //position to pick up fourth sample
                                 new ParallelAction(
-                                        getFourthSample.build(),
+                                        getFourthSample,
                                         robot.setElevatorTarget(350),
                                         robot.moveRotate(0.5)
                                 ),
@@ -149,7 +158,7 @@ public class LeftSideStarting extends LinearOpMode {
                                 robot.pickUpSample(),
 
                                 //position to score fourth sample
-                                scoreFourthSample.build(),
+                                scoreFourthSample,
 
                                 //score fourth sample
                                 robot.scoreSample(),
@@ -158,7 +167,7 @@ public class LeftSideStarting extends LinearOpMode {
                                 robot.resetMechs(),
 
                                 //achieve level one ascent
-                                levelOneAscent.build()
+                                levelOneAscent
                         )
                 )
 

@@ -131,6 +131,18 @@ public class TeleopWithLinkageDown extends OpMode {
                 -gamepad1.right_stick_x
         ));
 
+//        if (gamepad1.left_stick_button) {
+//            runningActions.add(
+//                    robot.setHangingTarget(2500)
+//            );
+//        }
+//
+//        if (gamepad1.right_stick_button) {
+//            runningActions.add(
+//                    robot.setHangingTarget(0)
+//            );
+//        }
+
         drive.updatePoseEstimate();
 
         if (specButton.onTrue()) {

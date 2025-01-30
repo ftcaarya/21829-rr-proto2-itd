@@ -45,19 +45,19 @@ public class LeftSideStarting extends LinearOpMode {
                 .build();
 
         Action getSecondSample = drive.actionBuilder(new Pose2d(-52,-52, -Math.PI))
-                .strafeToLinearHeading(new Vector2d(-48, -52), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-48, -46), Math.toRadians(90))
                 .build();
 
 
-        Action scoreSecondSample = drive.actionBuilder(new Pose2d(-48,-52, Math.toRadians(90)))
+        Action scoreSecondSample = drive.actionBuilder(new Pose2d(-48,-46, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
                 .build();
 
         Action getThirdSample = drive.actionBuilder(new Pose2d(-52,-52, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-58, -52), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-58, -46), Math.toRadians(90))
                 .build();
 
-        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-58,-52, Math.toRadians(90)))
+        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-58,-46, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
                 .build();
 
@@ -99,7 +99,8 @@ public class LeftSideStarting extends LinearOpMode {
                                 new ParallelAction(
                                         robot.setElevatorTarget(0),
                                         robot.setLinkageTarget(100),
-                                        robot.clawClose()
+                                        robot.clawClose(),
+                                        robot.servoDown()
                                 ),
 
                                 //position to drop preloaded
@@ -112,10 +113,9 @@ public class LeftSideStarting extends LinearOpMode {
                                 robot.resetMechs(),
 
                                 //position to pick up second sample
-                                new ParallelAction(
-                                        getSecondSample,
-                                        robot.setElevatorTarget(550)
-                                ),
+                                getSecondSample,
+                                robot.setElevatorTarget(850),
+                                new SleepAction(2),
 
                                 //pick up second sample
                                 robot.pickUpSample(),
@@ -124,50 +124,51 @@ public class LeftSideStarting extends LinearOpMode {
                                 scoreSecondSample,
 
                                 //score second sample
-                                robot.scoreSample(),
-
-                                //reset mechs
-                                robot.resetMechs(),
-
-                                //position to pick up third sample
-                                new ParallelAction(
-                                        getThirdSample,
-                                        robot.setElevatorTarget(550)
-                                ),
-
-                                //pick up third sample
-                                robot.pickUpSample(),
-
-                                //position to score third sample
-                                scoreThirdSample,
-
-                                //score third sample
-                                robot.scoreSample(),
-
-                                //reset mechs
-                                robot.resetMechs(),
-
-                                //position to pick up fourth sample
-                                new ParallelAction(
-                                        getFourthSample,
-                                        robot.setElevatorTarget(350),
-                                        robot.moveRotate(0.5)
-                                ),
-
-                                // pick up fourth sample
-                                robot.pickUpSample(),
-
-                                //position to score fourth sample
-                                scoreFourthSample,
-
-                                //score fourth sample
-                                robot.scoreSample(),
-
-                                //reset mechs
-                                robot.resetMechs(),
-
-                                //achieve level one ascent
-                                levelOneAscent
+                                robot.scoreSample()
+//
+//                                //reset mechs
+//                                robot.resetMechs(),
+//
+//                                //position to pick up third sample
+//                                getThirdSample,
+//                                robot.setElevatorTarget(550),
+//                                new SleepAction(3),
+//
+//                                //pick up third sample
+//                                robot.pickUpSample(),
+//
+//                                //position to score third sample
+//                                scoreThirdSample,
+//
+//                                //score third sample
+//                                robot.scoreSample(),
+//
+//                                //reset mechs
+//                                robot.resetMechs(),
+//
+//                                //position to pick up fourth sample
+//                                new ParallelAction(
+//                                        getFourthSample,
+//                                        robot.setElevatorTarget(500),
+//                                        robot.moveRotate(0.5)
+//                                ),
+//
+//                                new SleepAction(0.8),
+//
+//                                // pick up fourth sample
+//                                robot.pickUpSample(),
+//
+//                                //position to score fourth sample
+//                                scoreFourthSample,
+//
+//                                //score fourth sample
+//                                robot.scoreSample(),
+//
+//                                //reset mechs
+//                                robot.resetMechs(),
+//
+//                                //achieve level one ascent
+//                                levelOneAscent
                         )
                 )
 

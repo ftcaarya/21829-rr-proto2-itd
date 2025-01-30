@@ -43,6 +43,7 @@ public class AllMech extends LinearOpMode {
 
     PIDController linkageController;
     PIDController vertController;
+    PIDController hangingController;
 
     ServoProgramming servo;
 
@@ -51,10 +52,11 @@ public class AllMech extends LinearOpMode {
     public static double fv = 0.175, fl = 0.12;
 
     public volatile int linkTarget = 0;
-    public static int vertTarget;
+    public static int vertTarget = 0;
+    public static int hangTarget = 0;
 
-
-    private final double ticks_in_degree = 576.7/180;
+    private final double hang_ticks_in_degeres = 537.7/180; // current 312 rpm, 117 rpm is 1,425.1/180
+    private final double ticks_in_degree = 384.5/180;
 
 
     public AllMech(HardwareMap hardwareMap) {
@@ -177,20 +179,25 @@ public class AllMech extends LinearOpMode {
     public Action scoreSample() {
         return new SequentialAction(
                 setElevatorTarget(2500),
-                new SleepAction(0.2),
+                new SleepAction(2),
                 servoUp(),
-                clawOpen()
+                new SleepAction(0.2),
+                clawOpen(),
+                new SleepAction(0.2)
         );
     }
 
     public Action pickUpSample() {
         return new SequentialAction(
                 servoGet(),
+                new SleepAction(0.2),
                 clawClose(),
-                new ParallelAction(
-                        servoUp(),
-                        setLinkageTarget(100)
-                )
+                servoDown(),
+                new SleepAction(0.2),
+                setElevatorTarget(0),
+                new SleepAction(1),
+                setLinkageTarget(100),
+                new SleepAction(2)
         );
     }
 
@@ -199,6 +206,7 @@ public class AllMech extends LinearOpMode {
                 servoDown(),
                 new SleepAction(0.3),
                 setElevatorTarget(0),
+                new SleepAction(1),
                 new InstantAction(() -> linkTarget = -250),
                 new SleepAction(0.5),
                 new InstantAction(() -> linkTarget = -550)
@@ -234,6 +242,36 @@ public class AllMech extends LinearOpMode {
     public Action updateLinkPID(){
         return new UpdateLinkPID();
     }
+
+//    public class UpdateHangPID implements Action {
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            hangingController.setPID(ph, ih, dh);
+//
+//            int hangingPos = hanging.getCurrentPosition();
+//
+//            double hangingPID = hangingController.calculate(hangingPos, hangTarget);
+//
+//            double hangFF = Math.cos(Math.toRadians(linkTarget / hang_ticks_in_degeres)) * fh;
+//
+//            double hangPower = hangingPID + hangFF;
+//
+//            hanging.setPower(hangPower);
+//
+//            telemetry.addData("Hanging current position", hangingPos);
+//            telemetry.addData("Hanging target position", hangTarget);
+//            return true;
+//        }
+//    }
+//
+//    public Action updateHangPID() {
+//        return new UpdateHangPID();
+//    }
+//
+//    public Action setHangingTarget(int target) {
+//        return new InstantAction(() -> hangTarget = target);
+//    }
 
     public class UpdatePID implements Action {
 

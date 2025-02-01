@@ -281,7 +281,11 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad1.right_bumper) {
             runningActions.add(
-                    robot.setElevatorTarget(800)
+                    new ParallelAction(
+                            robot.servoDown(),
+                            robot.setElevatorTarget(755)
+                    )
+
 
             );
         }

@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
@@ -43,19 +45,16 @@ public class AllMech extends LinearOpMode {
 
     PIDController linkageController;
     PIDController vertController;
-    PIDController hangingController;
 
     ServoProgramming servo;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
-    public static double pl = 0.014, il = 0.0, dl = 0.0001;
+    public static double pl = 0.0185, il = 0.0, dl = 0.00025;
     public static double fv = 0.175, fl = 0.12;
 
     public volatile int linkTarget = 0;
     public static int vertTarget = 0;
-    public static int hangTarget = 0;
 
-    private final double hang_ticks_in_degeres = 537.7/180; // current 312 rpm, 117 rpm is 1,425.1/180
     private final double ticks_in_degree = 384.5/180;
 
 
@@ -153,6 +152,14 @@ public class AllMech extends LinearOpMode {
         );
     }
 
+    public Action servoAscent() {
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_ASCENT)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_ASCENT)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC_SCORE))
+        );
+    }
+
     public Action servoSpecimenScore(){
         return new ParallelAction(
                 new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SCORE)),
@@ -179,9 +186,9 @@ public class AllMech extends LinearOpMode {
     public Action scoreSample() {
         return new SequentialAction(
                 setElevatorTarget(2500),
-                new SleepAction(2),
+                new SleepAction(1),
                 servoUp(),
-                new SleepAction(0.2),
+                new SleepAction(0.5),
                 clawOpen(),
                 new SleepAction(0.2)
         );
@@ -190,14 +197,15 @@ public class AllMech extends LinearOpMode {
     public Action pickUpSample() {
         return new SequentialAction(
                 servoGet(),
-                new SleepAction(0.2),
+                new SleepAction(0.25),
                 clawClose(),
+                new SleepAction(0.25),
                 servoDown(),
                 new SleepAction(0.2),
                 setElevatorTarget(0),
-                new SleepAction(1),
-                setLinkageTarget(100),
-                new SleepAction(2)
+                new SleepAction(0.5),
+                setLinkageTarget(-75),
+                new SleepAction(0.5)
         );
     }
 

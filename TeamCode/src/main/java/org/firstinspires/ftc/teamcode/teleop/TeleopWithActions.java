@@ -70,7 +70,7 @@ public class TeleopWithActions extends OpMode {
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
-                        robot.setLinkageTarget(100)
+                        robot.setLinkageTarget(-100)
                 )
 
         );
@@ -220,7 +220,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(0)
+                            robot.setLinkageTarget(-150)
                     )
 
 

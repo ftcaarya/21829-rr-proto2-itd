@@ -70,7 +70,7 @@ public class MeepMeepTesting {
 
                 //level one ascent
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(-24, -8, Math.toRadians(180)), Math.PI/10)
+                .splineToSplineHeading(new Pose2d(-24, -6, Math.toRadians(180)), Math.PI/13)
                 /*
                 robot.servoUp() to score level one ascent points
                  */

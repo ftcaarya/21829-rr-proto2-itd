@@ -221,7 +221,7 @@ public class TeleopWithLinkageDown extends OpMode {
             runningActions.add(
                     new SequentialAction(
                             robot.servoDown(),
-                            new SleepAction(1),
+                            new SleepAction(0.5),
                             robot.setElevatorTarget(0)
                     )
 

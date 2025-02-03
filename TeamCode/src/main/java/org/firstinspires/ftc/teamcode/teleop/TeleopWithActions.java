@@ -220,7 +220,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(-150)
+                            robot.setLinkageTarget(-50)
                     )
 
 

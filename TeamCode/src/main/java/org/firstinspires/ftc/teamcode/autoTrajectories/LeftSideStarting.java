@@ -45,27 +45,27 @@ public class LeftSideStarting extends LinearOpMode {
                 .build();
 
         Action getSecondSample = drive.actionBuilder(new Pose2d(-50,-50, -Math.PI))
-                .strafeToLinearHeading(new Vector2d(-48, -46), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-47, -47), Math.toRadians(90))
                 .build();
 
 
-        Action scoreSecondSample = drive.actionBuilder(new Pose2d(-48,-46, Math.toRadians(90)))
+        Action scoreSecondSample = drive.actionBuilder(new Pose2d(-47,-47, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
                 .build();
 
         Action getThirdSample = drive.actionBuilder(new Pose2d(-50,-50, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-59, -46), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-59, -47), Math.toRadians(90))
                 .build();
 
-        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-59,-46, Math.toRadians(90)))
+        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-59,-47, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
                 .build();
 
         Action getFourthSample = drive.actionBuilder(new Pose2d(-50,-50, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-56, -39), (Math.PI - Math.atan((18/14.5))))
+                .strafeToLinearHeading(new Vector2d(-56, -41), (Math.PI - Math.atan((18/14.5))))
                 .build();
 
-        Action scoreFourthSample = drive.actionBuilder(new Pose2d(-54,-44, (Math.PI - Math.atan((18/14.5)))))
+        Action scoreFourthSample = drive.actionBuilder(new Pose2d(-54,-41, (Math.PI - Math.atan((18/14.5)))))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
                 .build();
 

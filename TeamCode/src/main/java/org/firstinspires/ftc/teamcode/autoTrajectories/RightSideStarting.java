@@ -37,7 +37,7 @@ public class RightSideStarting extends LinearOpMode {
         servo = new ServoProgramming(hardwareMap);
 
         Action dropPreloaded = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(0, -32), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(0, -32.5), Math.toRadians(270))
                 .build();
 
         Action getFirstSample = drive.actionBuilder(new Pose2d(0, -32, Math.toRadians(270)))
@@ -66,7 +66,7 @@ public class RightSideStarting extends LinearOpMode {
                 .build();
 
         Action scoreFirstSpecimen = drive.actionBuilder(new Pose2d(47, -45, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(-9, -32))
+                .strafeToConstantHeading(new Vector2d(-9, -32.5))
                 .build();
 
 
@@ -79,14 +79,14 @@ public class RightSideStarting extends LinearOpMode {
                 .build();
 
         Action scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -45.5, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(-6, -32),new TranslationalVelConstraint(80))
+                .strafeToConstantHeading(new Vector2d(-6, -32.5),new TranslationalVelConstraint(80))
                 .build();
 
         Action scoreThirdSpecimen = drive.actionBuilder(new Pose2d(47, -46, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(5, -32))
                 .build();
 
-        Action getThirdSpecimen = drive.actionBuilder(new Pose2d(-6, -30 , Math.toRadians(270)))
+        Action getThirdSpecimen = drive.actionBuilder(new Pose2d(-6, -32.5 , Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(47, -46), Math.toRadians(270))
                 .build();
 

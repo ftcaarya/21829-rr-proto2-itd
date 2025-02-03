@@ -215,7 +215,7 @@ public class AllMech extends LinearOpMode {
                 new SleepAction(0.3),
                 setElevatorTarget(0),
                 new SleepAction(1),
-                new InstantAction(() -> linkTarget = -250),
+                new InstantAction(() -> linkTarget = -300),
                 new SleepAction(0.5),
                 new InstantAction(() -> linkTarget = -550)
         );

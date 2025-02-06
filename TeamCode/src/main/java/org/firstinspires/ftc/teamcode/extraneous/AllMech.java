@@ -154,9 +154,9 @@ public class AllMech extends LinearOpMode {
 
     public Action servoAscent() {
         return new ParallelAction(
-                new InstantAction(() -> servo.arm.setPosition(ARM_ASCENT)),
-                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_ASCENT)),
-                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC_SCORE))
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
         );
     }
 
@@ -204,7 +204,7 @@ public class AllMech extends LinearOpMode {
                 new SleepAction(0.2),
                 setElevatorTarget(0),
                 new SleepAction(0.5),
-                setLinkageTarget(-75),
+                setLinkageTarget(20),
                 new SleepAction(0.5)
         );
     }

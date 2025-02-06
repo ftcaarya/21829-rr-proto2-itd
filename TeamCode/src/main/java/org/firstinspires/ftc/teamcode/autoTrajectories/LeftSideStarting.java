@@ -54,10 +54,10 @@ public class LeftSideStarting extends LinearOpMode {
                 .build();
 
         Action getThirdSample = drive.actionBuilder(new Pose2d(-50,-50, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-59, -47), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-61, -47), Math.toRadians(90))
                 .build();
 
-        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-59,-47, Math.toRadians(90)))
+        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-61,-47, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
                 .build();
 
@@ -71,7 +71,8 @@ public class LeftSideStarting extends LinearOpMode {
 
         Action levelOneAscent = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(-24, 0, Math.toRadians(180)), Math.PI/13, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .setTangent(-Math.toRadians(300))
+                .splineToSplineHeading(new Pose2d(-24, -4, Math.toRadians(180)), -Math.PI/13, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
                 .build();
 
         linkage = hardwareMap.get(DcMotor.class, "linkage");
@@ -97,7 +98,7 @@ public class LeftSideStarting extends LinearOpMode {
                                 //make sure everything is in the right place.
                                 new ParallelAction(
                                         robot.setElevatorTarget(0),
-                                        robot.setLinkageTarget(-75),
+                                        robot.setLinkageTarget(20),
                                         robot.clawClose(),
                                         robot.servoDown(),
                                         robot.moveRotate(0)
@@ -178,9 +179,10 @@ public class LeftSideStarting extends LinearOpMode {
                                 //achieve level one ascent
                                 new ParallelAction(
                                         levelOneAscent,
-                                        robot.setLinkageTarget(-75)
-                                ),
-                                robot.servoAscent()
+                                        robot.setLinkageTarget(-75),
+                                        robot.servoAscent()
+                                )
+
 
                         )
                 )

@@ -50,13 +50,13 @@ public class AllMech extends LinearOpMode {
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
     public static double pl = 0.0185, il = 0.0, dl = 0.00025;
-    public static double ph = 0.03, ih = 0.0, dh = 0.0;
+    public static double ph = 0.025, ih = 0.0, dh = 0.0;
     public static double fv = 0.175, fl = 0.12, fh = 0.1;
 
     public volatile int linkTarget = 0;
     public static int vertTarget = 0;
 
-    public static int hangTarget = 0;
+    public static int hangTarget;
 
     private final double ticks_in_degree = 384.5/180;
     private final double hang_ticks_in_degrees = 537.7/180;
@@ -70,7 +70,7 @@ public class AllMech extends LinearOpMode {
         elevator = hardwareMap.get(DcMotor.class, "elevator");
         hangingLeft = hardwareMap.get(DcMotor.class, "hanging_left");
         hangingRight = hardwareMap.get(DcMotor.class, "hanging_right");
-        hangingLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        hangingRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -279,7 +279,7 @@ public class AllMech extends LinearOpMode {
             double leftHangingPID = hangLeftController.calculate(leftHangingPos, hangTarget);
             double rightHangingPID = hangRightController.calculate(rightHangingPos, hangTarget);
 
-            double hangFF = Math.cos(Math.toRadians(hangTarget /ticks_in_degree )) * fh;
+            double hangFF = Math.cos(Math.toRadians(hangTarget /hang_ticks_in_degrees )) * fh;
 
             double rightHangPower = rightHangingPID + hangFF;
             double leftHangPower = leftHangingPID + hangFF;
@@ -322,7 +322,7 @@ public class AllMech extends LinearOpMode {
 
             double vertFF = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * fv;
             double linkFF = Math.cos(Math.toRadians(linkTarget / ticks_in_degree)) * fl;
-            double hangFF = Math.cos(Math.toRadians(hangTarget / ticks_in_degree)) * fh;
+            double hangFF = Math.cos(Math.toRadians(hangTarget / hang_ticks_in_degrees)) * fh;
 
             double vertPower = vertPID + vertFF;
             double linkPower = linkagePID + linkFF;

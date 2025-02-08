@@ -39,6 +39,7 @@ public class TeleopWithActions extends OpMode {
 
     public int clawCounter = -1;
     private int specCounter = -1;
+    private int hangCounter = -1;
 
 
     private final FtcDashboard dash = FtcDashboard.getInstance();
@@ -67,6 +68,10 @@ public class TeleopWithActions extends OpMode {
         );
 
         runningActions.add(
+                robot.updateHangPID()
+        );
+
+        runningActions.add(
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
@@ -81,6 +86,7 @@ public class TeleopWithActions extends OpMode {
     public void loop() {
         EnhancedBooleanSupplier clawButton = Pasteurized.gamepad2().rightBumper();
         EnhancedBooleanSupplier specButton = Pasteurized.gamepad2().rightStickButton();
+        EnhancedBooleanSupplier hangingButton = Pasteurized.gamepad1().leftBumper();
 
         previousGamepad1.copy(currentGamepad1);
         previousGamepad2.copy(currentGamepad2);
@@ -133,6 +139,26 @@ public class TeleopWithActions extends OpMode {
         ));
 
         drive.updatePoseEstimate();
+
+        if (hangingButton.onTrue()) {
+            hangCounter++;
+        }
+
+        if (hangCounter > 1) {
+            hangCounter = 0;
+        }
+
+        if (hangCounter == 0) {
+            runningActions.add(
+                    robot.setHangingTarget(2700)
+            );
+        }
+
+        if (hangCounter == 1) {
+            runningActions.add(
+                    robot.setHangingTarget(1200)
+            );
+        }
 
         if (specButton.onTrue()) {
             specCounter++;
@@ -295,11 +321,13 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (!currentGamepad1.left_bumper && previousGamepad1.left_bumper) {
+        if (gamepad1.left_bumper) {
             runningActions.add(
-                    robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 200)
+                    robot.setHangingTarget(2700)
             );
         }
+
+
 
         if (!currentGamepad1.y && previousGamepad1.y) {
             runningActions.add(

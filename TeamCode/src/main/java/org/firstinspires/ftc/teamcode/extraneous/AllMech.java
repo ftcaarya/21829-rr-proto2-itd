@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
-import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
@@ -39,39 +37,55 @@ public class AllMech extends LinearOpMode {
 
     public DcMotor frontLeft, frontRight, rearRight, rearLeft;
     public Servo arm, wrist, rotate, claw, leftArm;
-    public static DcMotor linkage, elevator;
+    public static DcMotor linkage, elevator, hangingLeft, hangingRight;
 
     public IMU imu;
 
     PIDController linkageController;
     PIDController vertController;
+    PIDController hangLeftController;
+    PIDController hangRightController;
 
     ServoProgramming servo;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
     public static double pl = 0.0185, il = 0.0, dl = 0.00025;
-    public static double fv = 0.175, fl = 0.12;
+    public static double ph = 0.03, ih = 0.0, dh = 0.0;
+    public static double fv = 0.175, fl = 0.12, fh = 0.1;
 
     public volatile int linkTarget = 0;
     public static int vertTarget = 0;
 
+    public static int hangTarget = 0;
+
     private final double ticks_in_degree = 384.5/180;
+    private final double hang_ticks_in_degrees = 537.7/180;
+
+
 
 
     public AllMech(HardwareMap hardwareMap) {
         linkage = hardwareMap.get(DcMotor.class, "linkage");
         linkage.setDirection(DcMotorSimple.Direction.REVERSE);
         elevator = hardwareMap.get(DcMotor.class, "elevator");
-
+        hangingLeft = hardwareMap.get(DcMotor.class, "hanging_left");
+        hangingRight = hardwareMap.get(DcMotor.class, "hanging_right");
+        hangingLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangingRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangingLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hangingRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hangingLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         System.out.println("subsystem encoders reset");
 
         linkageController = new PIDController(pl, il, dl);
         vertController = new PIDController(pv, iv, dv);
+        hangLeftController = new PIDController(ph, ih, dh);
+        hangRightController = new PIDController(ph, ih, dh);
 
         servo = new ServoProgramming(hardwareMap);
 
@@ -251,57 +265,86 @@ public class AllMech extends LinearOpMode {
         return new UpdateLinkPID();
     }
 
-//    public class UpdateHangPID implements Action {
-//
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//            hangingController.setPID(ph, ih, dh);
-//
-//            int hangingPos = hanging.getCurrentPosition();
-//
-//            double hangingPID = hangingController.calculate(hangingPos, hangTarget);
-//
-//            double hangFF = Math.cos(Math.toRadians(linkTarget / hang_ticks_in_degeres)) * fh;
-//
-//            double hangPower = hangingPID + hangFF;
-//
-//            hanging.setPower(hangPower);
-//
-//            telemetry.addData("Hanging current position", hangingPos);
-//            telemetry.addData("Hanging target position", hangTarget);
-//            return true;
-//        }
-//    }
-//
-//    public Action updateHangPID() {
-//        return new UpdateHangPID();
-//    }
-//
-//    public Action setHangingTarget(int target) {
-//        return new InstantAction(() -> hangTarget = target);
-//    }
+    public class UpdateHangPID implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hangLeftController.setPID(ph, ih, dh);
+            hangRightController.setPID(ph,ih,dh);
+
+            int leftHangingPos = hangingLeft.getCurrentPosition();
+            int rightHangingPos = hangingRight.getCurrentPosition();
+
+
+            double leftHangingPID = hangLeftController.calculate(leftHangingPos, hangTarget);
+            double rightHangingPID = hangRightController.calculate(rightHangingPos, hangTarget);
+
+            double hangFF = Math.cos(Math.toRadians(hangTarget /ticks_in_degree )) * fh;
+
+            double rightHangPower = rightHangingPID + hangFF;
+            double leftHangPower = leftHangingPID + hangFF;
+
+            hangingLeft.setPower(leftHangPower);
+            hangingRight.setPower(rightHangPower);
+
+            telemetry.addData("Hanging current position", leftHangingPos);
+            telemetry.addData("Hanging target position", hangTarget);
+            return true;
+        }
+    }
+
+    public Action updateHangPID() {
+        return new UpdateHangPID();
+    }
+
+    public Action setHangingTarget(int target) {
+        return new InstantAction(() -> hangTarget = target);
+    }
 
     public class UpdatePID implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            linkageController.setPID(pl, il ,dl);
             vertController.setPID(pv, iv, dv);
+            linkageController.setPID(pl, il, dl);
+            hangLeftController.setPID(ph, ih, dh);
+            hangRightController.setPID(ph, ih, dh);
 
-            int linkagePos = linkage.getCurrentPosition();
             int vertPos = elevator.getCurrentPosition();
+            int linkagePos = linkage.getCurrentPosition();
+            int hangLeftPos = hangingLeft.getCurrentPosition();
+            int hangRightPos = hangingRight.getCurrentPosition();
 
-            double linkagePID = linkageController.calculate(linkagePos, linkTarget);
             double vertPID = vertController.calculate(vertPos, vertTarget);
+            double linkagePID = linkageController.calculate(linkagePos, linkTarget);
+            double hangLeftPID = hangLeftController.calculate(hangLeftPos, hangTarget);
+            double hangRightPID = hangRightController.calculate(hangRightPos, hangTarget);
 
-            double linkFF = Math.cos(Math.toRadians(linkTarget / ticks_in_degree)) * fl;
             double vertFF = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * fv;
+            double linkFF = Math.cos(Math.toRadians(linkTarget / ticks_in_degree)) * fl;
+            double hangFF = Math.cos(Math.toRadians(hangTarget / ticks_in_degree)) * fh;
 
-            double linkPower = linkagePID + linkFF;
             double vertPower = vertPID + vertFF;
+            double linkPower = linkagePID + linkFF;
+            double hangRightPower = hangRightPID + hangFF;
+            double hangLeftPower = hangLeftPID + hangFF;
 
+            hangingRight.setPower(hangRightPower);
+            hangingLeft.setPower(hangLeftPower);
             elevator.setPower(vertPower);
             linkage.setPower(linkPower);
+
+            telemetry.addData("Elevator currnet position", vertPos);
+            telemetry.addData("Elevator target position", vertTarget);
+
+            telemetry.addData("Linkage current position", linkagePos);
+            telemetry.addData("Linkage target position", linkTarget);
+
+            telemetry.addData("left hang current position", hangLeftPos);
+            telemetry.addData("left hang target position", hangTarget);
+
+            telemetry.addData("right hang current position", hangRightPos);
+            telemetry.addData("right hang target position", hangTarget);
 
             return true;
         }

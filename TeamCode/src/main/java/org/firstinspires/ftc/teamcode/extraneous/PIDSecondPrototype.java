@@ -19,15 +19,15 @@ public class PIDSecondPrototype extends OpMode {
 
     public static double pv = 0.03, iv = 0.0, dv = 0.00065;
     public static double pl = 0.014, il = 0.0, dl = 0.0001;
-    public static double ph = 0.0, ih = 0.0, dh = 0.0;
-    public static double fv = 0.2, fl = 0.12, fh = 0.0;
+    public static double ph = 0.03, ih = 0.0, dh = 0.0;
+    public static double fv = 0.2, fl = 0.12, fh = 0.1;
 
     public static int vertTarget;
     public static int hangTarget;
     public static int linkTarget;
 
     private final double ticks_in_degrees = 384.5/180;
-    private final double hang_ticks_in_degrees = 0/180;
+    private final double hang_ticks_in_degrees = 537.7/180;
 
     public DcMotor linkage, elevator, hangingLeft, hangingRight;
 
@@ -44,8 +44,8 @@ public class PIDSecondPrototype extends OpMode {
         
         elevator = hardwareMap.get(DcMotor.class, "elevator");
 
-        hangingLeft = hardwareMap.get(DcMotor.class, "hanging left");
-        hangingRight = hardwareMap.get(DcMotor.class, "hanging right");
+        hangingLeft = hardwareMap.get(DcMotor.class, "hanging_left");
+        hangingRight = hardwareMap.get(DcMotor.class, "hanging_right");
 
         hangingRight.setDirection(DcMotorSimple.Direction.REVERSE);
         hangingLeft.setDirection(DcMotorSimple.Direction.FORWARD);

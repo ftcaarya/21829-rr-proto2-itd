@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_DOWN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.WRIST_SERVO_UP;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
@@ -84,6 +88,16 @@ public class HardwareTesting extends OpMode {
         ));
 
         drive.updatePoseEstimate();
+
+        if (gamepad1.dpad_up) {
+            runningActions.add(
+                    new ParallelAction(
+                            new InstantAction(() -> servo.arm.setPosition(ARM_ASCENT)),
+                            new InstantAction(() -> servo.arm.setPosition(LEFT_ARM_ASCENT)),
+                            new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
+                    )
+            );
+        }
 
         if (aButton.onTrue()) {
             specCounter++;

@@ -21,15 +21,10 @@ public class EncoderCount extends OpMode {
     }
 
     @Override
-    public void start() {
-        elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    @Override
     public void loop() {
+        telemetry.addData("linkage position", linkage.getCurrentPosition());
+        telemetry.addData("elevator position", elevator.getCurrentPosition());
 
+        telemetry.update();
     }
 }

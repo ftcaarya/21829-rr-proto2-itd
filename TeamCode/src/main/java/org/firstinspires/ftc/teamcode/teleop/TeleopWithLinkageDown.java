@@ -70,7 +70,8 @@ public class TeleopWithLinkageDown extends OpMode {
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
-                        robot.setLinkageTarget(550)
+                        robot.setLinkageTarget(570),
+                        robot.clawOpen()
                 )
 
         );
@@ -130,6 +131,18 @@ public class TeleopWithLinkageDown extends OpMode {
                 ),
                 -gamepad1.right_stick_x
         ));
+
+//        if (gamepad1.left_stick_button) {
+//            runningActions.add(
+//                    robot.setHangingTarget(2500)
+//            );
+//        }
+//
+//        if (gamepad1.right_stick_button) {
+//            runningActions.add(
+//                    robot.setHangingTarget(0)
+//            );
+//        }
 
         drive.updatePoseEstimate();
 
@@ -209,7 +222,7 @@ public class TeleopWithLinkageDown extends OpMode {
             runningActions.add(
                     new SequentialAction(
                             robot.servoDown(),
-                            new SleepAction(1),
+                            new SleepAction(0.5),
                             robot.setElevatorTarget(0)
                     )
 
@@ -220,7 +233,7 @@ public class TeleopWithLinkageDown extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(550)
+                            robot.setLinkageTarget(570)
                     )
 
 

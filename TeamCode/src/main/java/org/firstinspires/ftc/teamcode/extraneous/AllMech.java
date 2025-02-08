@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.extraneous;
 
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_SPEC;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.ARM_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_CLOSE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_ASCENT;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SCORE;
 import static org.firstinspires.ftc.teamcode.extraneous.ServoProgramming.LEFT_ARM_SERVO_SPEC;
@@ -21,6 +23,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -45,14 +49,13 @@ public class AllMech extends LinearOpMode {
     ServoProgramming servo;
 
     public static double pv = 0.0055, iv = 0.0, dv = 0.00065;
-    public static double pl = 0.014, il = 0.0, dl = 0.0001;
+    public static double pl = 0.0185, il = 0.0, dl = 0.00025;
     public static double fv = 0.175, fl = 0.12;
 
     public volatile int linkTarget = 0;
-    public static int vertTarget;
+    public static int vertTarget = 0;
 
-
-    private final double ticks_in_degree = 576.7/180;
+    private final double ticks_in_degree = 384.5/180;
 
 
     public AllMech(HardwareMap hardwareMap) {
@@ -149,6 +152,14 @@ public class AllMech extends LinearOpMode {
         );
     }
 
+    public Action servoAscent() {
+        return new ParallelAction(
+                new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.leftArm.setPosition(LEFT_ARM_SERVO_SPEC)),
+                new InstantAction(() -> servo.wrist.setPosition(WRIST_SERVO_SPEC))
+        );
+    }
+
     public Action servoSpecimenScore(){
         return new ParallelAction(
                 new InstantAction(() -> servo.arm.setPosition(ARM_SERVO_SCORE)),
@@ -170,6 +181,44 @@ public class AllMech extends LinearOpMode {
 
     public Action setLinkageTarget(int target) {
         return new InstantAction(() -> linkTarget = target);
+    }
+
+    public Action scoreSample() {
+        return new SequentialAction(
+                setElevatorTarget(2500),
+                new SleepAction(1),
+                servoUp(),
+                new SleepAction(0.5),
+                clawOpen(),
+                new SleepAction(0.2)
+        );
+    }
+
+    public Action pickUpSample() {
+        return new SequentialAction(
+                servoGet(),
+                new SleepAction(0.25),
+                clawClose(),
+                new SleepAction(0.25),
+                servoDown(),
+                new SleepAction(0.2),
+                setElevatorTarget(0),
+                new SleepAction(0.5),
+                setLinkageTarget(20),
+                new SleepAction(0.5)
+        );
+    }
+
+    public Action resetMechs() {
+        return new SequentialAction(
+                servoDown(),
+                new SleepAction(0.3),
+                setElevatorTarget(0),
+                new SleepAction(1),
+                new InstantAction(() -> linkTarget = -300),
+                new SleepAction(0.5),
+                new InstantAction(() -> linkTarget = -550)
+        );
     }
 
     public Action setElevatorTarget(int target) {
@@ -201,6 +250,36 @@ public class AllMech extends LinearOpMode {
     public Action updateLinkPID(){
         return new UpdateLinkPID();
     }
+
+//    public class UpdateHangPID implements Action {
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            hangingController.setPID(ph, ih, dh);
+//
+//            int hangingPos = hanging.getCurrentPosition();
+//
+//            double hangingPID = hangingController.calculate(hangingPos, hangTarget);
+//
+//            double hangFF = Math.cos(Math.toRadians(linkTarget / hang_ticks_in_degeres)) * fh;
+//
+//            double hangPower = hangingPID + hangFF;
+//
+//            hanging.setPower(hangPower);
+//
+//            telemetry.addData("Hanging current position", hangingPos);
+//            telemetry.addData("Hanging target position", hangTarget);
+//            return true;
+//        }
+//    }
+//
+//    public Action updateHangPID() {
+//        return new UpdateHangPID();
+//    }
+//
+//    public Action setHangingTarget(int target) {
+//        return new InstantAction(() -> hangTarget = target);
+//    }
 
     public class UpdatePID implements Action {
 

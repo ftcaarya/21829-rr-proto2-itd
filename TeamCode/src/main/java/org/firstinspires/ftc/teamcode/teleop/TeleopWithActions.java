@@ -70,7 +70,8 @@ public class TeleopWithActions extends OpMode {
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
-                        robot.setLinkageTarget(100)
+                        robot.setLinkageTarget(25),
+                        robot.clawOpen()
                 )
 
         );
@@ -205,14 +206,17 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (gamepad2.dpad_down) {
+        if (gamepad2.dpad_down && (AllMech.linkage.getCurrentPosition() < -400)) {
+            runningActions.add(
+                            robot.setElevatorTarget(0)
+            );
+        } else if (gamepad2.dpad_down) {
             runningActions.add(
                     new SequentialAction(
                             robot.servoDown(),
-                            new SleepAction(1),
+                            new SleepAction(0.5),
                             robot.setElevatorTarget(0)
                     )
-
             );
         }
 
@@ -220,7 +224,7 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(0)
+                            robot.setLinkageTarget(25)
                     )
 
 
@@ -281,7 +285,12 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad1.right_bumper) {
             runningActions.add(
-                    robot.setElevatorTarget(800)
+                    new SequentialAction(
+                            robot.servoDown(),
+                            new SleepAction(0.3),
+                            robot.setElevatorTarget(755)
+                    )
+
 
             );
         }

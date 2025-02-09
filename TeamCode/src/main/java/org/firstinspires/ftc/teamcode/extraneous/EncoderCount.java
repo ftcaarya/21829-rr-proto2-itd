@@ -7,11 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous(name = "reset encoders")
 public class EncoderCount extends OpMode {
     private static DcMotor linkage, elevator;
+    AllMech robot;
 
     @Override
     public void init() {
         linkage = hardwareMap.get(DcMotor.class, "linkage");
         elevator = hardwareMap.get(DcMotor.class, "elevator");
+        robot = new AllMech(hardwareMap);
 
 
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -24,6 +26,8 @@ public class EncoderCount extends OpMode {
     public void loop() {
         telemetry.addData("linkage position", linkage.getCurrentPosition());
         telemetry.addData("elevator position", elevator.getCurrentPosition());
+
+        AllMech.hangTarget = 0;
 
         telemetry.update();
     }

@@ -85,6 +85,8 @@ public class LeftSideStarting extends LinearOpMode {
         linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
+
+
         waitForStart();
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

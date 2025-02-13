@@ -40,13 +40,17 @@ public class LayeringTest  extends OpMode {
     SDKGamepad sampleGamepad = new SDKGamepad(gamepad2);
     SDKGamepad specimenGamepad = new SDKGamepad(gamepad2);
 
-    Map<Layers, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>> pasteurizedGamepadMap = new HashMap<Layers, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>>(){{
+    Map<Layers, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>> pasteurizedGamepadMap = new
+            HashMap<Layers, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>>(){{
         put(Layers.SAMPLES, sampleGamepad);
         put(Layers.SPECIMEN, specimenGamepad);
     }};
-    MapLayeringSystem<Layers, EnhancedDoubleSupplier, EnhancedBooleanSupplier, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>> enumLayeringSystem = new MapLayeringSystem<>(Layers.SAMPLES, pasteurizedGamepadMap);
+    MapLayeringSystem<Layers, EnhancedDoubleSupplier, EnhancedBooleanSupplier,
+            PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>> enumLayeringSystem =
+            new MapLayeringSystem<>(Layers.SAMPLES, pasteurizedGamepadMap);
 
-    LayeredGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>> layeredGamepad = new LayeredGamepad<>(enumLayeringSystem);
+    LayeredGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier, PasteurizedGamepad<EnhancedDoubleSupplier, EnhancedBooleanSupplier>>
+            layeredGamepad = new LayeredGamepad<>(enumLayeringSystem);
 
     private final FtcDashboard dash = FtcDashboard.getInstance();
     private List<Action> runningActions = new ArrayList<>();

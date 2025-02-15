@@ -72,10 +72,10 @@ public class RightSideStarting extends LinearOpMode {
                 .build();
 
         Action slowGetSecondSpecNoVel = drive.actionBuilder(new Pose2d(47, -39, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(47, -44), null, new ProfileAccelConstraint(-30, 30))
+                .strafeToConstantHeading(new Vector2d(47, -45), null, new ProfileAccelConstraint(-30, 30))
                 .build();
 
-        Action scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -44, Math.toRadians(270)))
+        Action scoreSecondSpecimen = drive.actionBuilder(new Pose2d(47, -45, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(-6, -29),new TranslationalVelConstraint(80))
                 .build();
 
@@ -213,7 +213,7 @@ public class RightSideStarting extends LinearOpMode {
                                         robot.servoUp(),
                                         robot.setLinkageTarget(25)
                                 ),
-//                                new SleepAction(0.5),
+                                new SleepAction(0.5),
 
 
 
@@ -258,7 +258,7 @@ public class RightSideStarting extends LinearOpMode {
 
 
                                 robot.setLinkageTarget(25),
-//                                new SleepAction(0.5),
+                                new SleepAction(0.5),
                                 //score second specimen
 
                                 new ParallelAction(

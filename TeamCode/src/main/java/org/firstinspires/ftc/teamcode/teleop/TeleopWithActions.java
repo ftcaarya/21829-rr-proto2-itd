@@ -39,6 +39,7 @@ public class TeleopWithActions extends OpMode {
 
     public int clawCounter = -1;
     private int specCounter = -1;
+    private int hangCounter = -1;
 
 
     private final FtcDashboard dash = FtcDashboard.getInstance();
@@ -67,10 +68,15 @@ public class TeleopWithActions extends OpMode {
         );
 
         runningActions.add(
+                robot.updateHangPID()
+        );
+
+        runningActions.add(
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
-                        robot.setLinkageTarget(100)
+                        robot.setLinkageTarget(25),
+                        robot.clawOpen()
                 )
 
         );
@@ -80,6 +86,10 @@ public class TeleopWithActions extends OpMode {
     public void loop() {
         EnhancedBooleanSupplier clawButton = Pasteurized.gamepad2().rightBumper();
         EnhancedBooleanSupplier specButton = Pasteurized.gamepad2().rightStickButton();
+        EnhancedBooleanSupplier hangingButton = Pasteurized.gamepad1().leftBumper();
+        EnhancedBooleanSupplier leftRotateButton = Pasteurized.gamepad2().x();
+        EnhancedBooleanSupplier rightRotateButton = Pasteurized.gamepad2().b();
+
 
         previousGamepad1.copy(currentGamepad1);
         previousGamepad2.copy(currentGamepad2);
@@ -123,15 +133,50 @@ public class TeleopWithActions extends OpMode {
 //        robot.frontRight.setPower(frontRightPower);
 //        robot.rearRight.setPower(backRightPower);
 
+//        drive.setDrivePowers(new PoseVelocity2d(
+//                new Vector2d(
+//                        (-gamepad1.left_stick_y * 0.8),
+//                        (-gamepad1.left_stick_x * 0.8)
+//                ),
+//                -gamepad1.right_stick_x
+//        ));
+
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        (-gamepad1.left_stick_y * 0.8),
-                        (-gamepad1.left_stick_x * 0.8)
+                        0.48 * Math.tan(1.12 * gamepad1.left_stick_y),
+                        0.48 * Math.tan(1.12 * gamepad1.left_stick_x)
                 ),
                 -gamepad1.right_stick_x
         ));
 
+
         drive.updatePoseEstimate();
+
+        if (hangingButton.onTrue()) {
+            hangCounter++;
+        }
+
+        if (hangCounter > 2) {
+            hangCounter = 0;
+        }
+
+        if (hangCounter == 0) {
+            runningActions.add(
+                    robot.setHangingTarget(2700)
+            );
+        }
+
+        if (hangCounter == 1) {
+            runningActions.add(
+                    robot.setHangingTarget(1200)
+            );
+        }
+
+        if (hangCounter == 2) {
+            runningActions.add(
+                    robot.setHangingTarget(0)
+            );
+        }
 
         if (specButton.onTrue()) {
             specCounter++;
@@ -184,13 +229,13 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (currentGamepad2.x && !previousGamepad2.x){
+        if (leftRotateButton.onTrue()){
             runningActions.add(
                     new InstantAction(() -> servo.rotate.setPosition(servo.rotate.getPosition() + .1))
             );
         }
 
-        if (!currentGamepad2.b && previousGamepad2.b){
+        if (rightRotateButton.onTrue()){
             runningActions.add(
                     new InstantAction(() -> servo.rotate.setPosition(servo.rotate.getPosition() - .1))
 
@@ -205,14 +250,17 @@ public class TeleopWithActions extends OpMode {
             );
         }
 
-        if (gamepad2.dpad_down) {
+        if (gamepad2.dpad_down && (AllMech.linkage.getCurrentPosition() < -400)) {
+            runningActions.add(
+                            robot.setElevatorTarget(0)
+            );
+        } else if (gamepad2.dpad_down) {
             runningActions.add(
                     new SequentialAction(
                             robot.servoDown(),
-                            new SleepAction(1),
+                            new SleepAction(0.5),
                             robot.setElevatorTarget(0)
                     )
-
             );
         }
 
@@ -220,10 +268,8 @@ public class TeleopWithActions extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(0)
+                            robot.setLinkageTarget(25)
                     )
-
-
             );
         }
 
@@ -281,16 +327,21 @@ public class TeleopWithActions extends OpMode {
 
         if (gamepad1.right_bumper) {
             runningActions.add(
-                    robot.setElevatorTarget(800)
-
+                    new SequentialAction(
+                            robot.servoDown(),
+                            new SleepAction(0.3),
+                            robot.setElevatorTarget(755)
+                    )
             );
         }
 
-        if (!currentGamepad1.left_bumper && previousGamepad1.left_bumper) {
-            runningActions.add(
-                    robot.setElevatorTarget(AllMech.elevator.getCurrentPosition() - 200)
-            );
-        }
+//        if (gamepad1.left_bumper) {
+//            runningActions.add(
+//                    robot.setHangingTarget(2700)
+//            );
+//        }
+
+
 
         if (!currentGamepad1.y && previousGamepad1.y) {
             runningActions.add(

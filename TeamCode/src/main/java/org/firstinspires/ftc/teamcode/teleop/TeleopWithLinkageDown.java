@@ -39,6 +39,7 @@ public class TeleopWithLinkageDown extends OpMode {
 
     public int clawCounter = -1;
     private int specCounter = -1;
+    private int hangCounter = -1;
 
 
     private final FtcDashboard dash = FtcDashboard.getInstance();
@@ -67,10 +68,16 @@ public class TeleopWithLinkageDown extends OpMode {
         );
 
         runningActions.add(
+                robot.updateHangPID()
+        );
+
+        runningActions.add(
                 new SequentialAction(
                         robot.setElevatorTarget(0),
                         robot.servoDown(),
-                        robot.setLinkageTarget(550)
+                        robot.setLinkageTarget(570),
+                        robot.clawOpen(),
+                        robot.setHangingTarget(0)
                 )
 
         );
@@ -80,6 +87,7 @@ public class TeleopWithLinkageDown extends OpMode {
     public void loop() {
         EnhancedBooleanSupplier clawButton = Pasteurized.gamepad2().rightBumper();
         EnhancedBooleanSupplier specButton = Pasteurized.gamepad2().rightStickButton();
+        EnhancedBooleanSupplier hangButton = Pasteurized.gamepad1().leftBumper();
 
         previousGamepad1.copy(currentGamepad1);
         previousGamepad2.copy(currentGamepad2);
@@ -130,6 +138,26 @@ public class TeleopWithLinkageDown extends OpMode {
                 ),
                 -gamepad1.right_stick_x
         ));
+
+        if (hangButton.onTrue()) {
+            hangCounter++;
+        }
+
+        if (hangCounter == 0) {
+            runningActions.add(
+                    robot.setHangingTarget(2700)
+            );
+        }
+
+        if (hangCounter == 1) {
+            runningActions.add(
+                    robot.setHangingTarget(1000)
+            );
+        }
+
+        if (hangCounter > 1) {
+            hangCounter = 0;
+        }
 
         drive.updatePoseEstimate();
 
@@ -209,7 +237,7 @@ public class TeleopWithLinkageDown extends OpMode {
             runningActions.add(
                     new SequentialAction(
                             robot.servoDown(),
-                            new SleepAction(1),
+                            new SleepAction(0.5),
                             robot.setElevatorTarget(0)
                     )
 
@@ -220,7 +248,7 @@ public class TeleopWithLinkageDown extends OpMode {
             runningActions.add(
                     new ParallelAction(
                             robot.servoDown(),
-                            robot.setLinkageTarget(550)
+                            robot.setLinkageTarget(570)
                     )
 
 

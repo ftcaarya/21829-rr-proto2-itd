@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autoTrajectories;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
@@ -32,33 +33,47 @@ public class LeftSideStarting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(-10, -61, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(-33, -61, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         robot = new AllMech(hardwareMap);
         servo = new ServoProgramming(hardwareMap);
 
-        TrajectoryActionBuilder dropPreloaded = drive.actionBuilder(initialPose)
+        Action dropPreloaded = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineToLinearHeading(new Pose2d(-54,-54,Math.toRadians(45)), -Math.toRadians(180));
+                .splineToLinearHeading(new Pose2d(-50, -50 , Math.toRadians(45)), -Math.PI)
+                .build();
 
-        TrajectoryActionBuilder getFirstSample = drive.actionBuilder(new Pose2d(-54,-54,Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-48,-40),Math.toRadians(90));
+        Action getSecondSample = drive.actionBuilder(new Pose2d(-50,-50, -Math.PI))
+                .strafeToLinearHeading(new Vector2d(-47, -46), Math.toRadians(90))
+                .build();
 
-        TrajectoryActionBuilder ScoreFirstSample = drive.actionBuilder(new Pose2d(-48,-40,Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45));
 
-        TrajectoryActionBuilder getSecondSample = drive.actionBuilder(new Pose2d(-54,-54,Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-58,-40),Math.toRadians(90));
+        Action scoreSecondSample = drive.actionBuilder(new Pose2d(-47,-46, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
+                .build();
 
-        TrajectoryActionBuilder ScoreSecondSample = drive.actionBuilder(new Pose2d(-58,-40,Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45));
+        Action getThirdSample = drive.actionBuilder(new Pose2d(-50,-50, Math.toRadians(45)))
+                .strafeToLinearHeading(new Vector2d(-61, -46), Math.toRadians(90))
+                .build();
 
-        TrajectoryActionBuilder getThirdSample = drive.actionBuilder(new Pose2d(-54,-54,Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-58,-40),Math.toRadians(135));
+        Action scoreThirdSample = drive.actionBuilder(new Pose2d(-61,-46, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
+                .build();
 
-        TrajectoryActionBuilder ScoreThirdSample = drive.actionBuilder(new Pose2d(-58,-40,Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-54,-54), Math.toRadians(45));
+        Action getFourthSample = drive.actionBuilder(new Pose2d(-50,-50, Math.toRadians(45)))
+                .strafeToLinearHeading(new Vector2d(-56, -40), (Math.PI - Math.atan((18/14.5))))
+                .build();
+
+        Action scoreFourthSample = drive.actionBuilder(new Pose2d(-54,-40, (Math.PI - Math.atan((18/14.5)))))
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45))
+                .build();
+
+        Action levelOneAscent = drive.actionBuilder(new Pose2d(-50, -50, Math.toRadians(45)))
+                .setReversed(false)
+                .setTangent(-Math.toRadians(300))
+                .splineToSplineHeading(new Pose2d(-24, -4, Math.toRadians(180)), -Math.PI/13, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .build();
 
         linkage = hardwareMap.get(DcMotor.class, "linkage");
         elevator = hardwareMap.get(DcMotor.class, "elevator");
@@ -68,6 +83,8 @@ public class LeftSideStarting extends LinearOpMode {
         linkage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linkage.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 
 
         waitForStart();
@@ -80,100 +97,93 @@ public class LeftSideStarting extends LinearOpMode {
                 new ParallelAction(
                         robot.updatePID(),
                         new SequentialAction(
-                                robot.setElevatorTarget(0),
-                                robot.setLinkageTarget(100),
+                                //make sure everything is in the right place.
                                 new ParallelAction(
+                                        robot.setElevatorTarget(0),
+                                        robot.setLinkageTarget(20),
                                         robot.clawClose(),
-                                        dropPreloaded.build(),
-                                        robot.servoUp()
+                                        robot.servoDown(),
+                                        robot.moveRotate(0)
                                 ),
-                                robot.setElevatorTarget(2500),
-                                new SleepAction(1),
-                                robot.clawOpen(),
+
+                                //position to drop preloaded
+                                dropPreloaded,
+
+                                //drop preloaded
+                                robot.scoreSample(),
+
+                                //reset mechs
+                                robot.resetMechs(),
+
+                                //position to pick up second sample
+                                new ParallelAction(
+                                        getSecondSample,
+                                        robot.setElevatorTarget(600)
+                                ),
+//                                new SleepAction(0.4),
+
+                                //pick up second sample
+                                robot.pickUpSample(),
+
+                                //position to score second sample
+                                scoreSecondSample,
+
+                                //score second sample
+                                robot.scoreSample(),
+
+                                //reset mechs
+                                robot.resetMechs(),
+
+                                //position to pick up third sample
+                                new ParallelAction(
+                                        getThirdSample,
+                                        robot.setElevatorTarget(600)
+                                ),
+//                                new SleepAction(.4),
+
+                                //pick up third sample
+                                robot.pickUpSample(),
+
+                                //position to score third sample
+                                scoreThirdSample,
+
+                                //score third sample
+                                robot.scoreSample(),
+
+                                //reset mechs
+                                robot.resetMechs(),
+//
+                                //position to pick up fourth sample
+                                new ParallelAction(
+                                        getFourthSample,
+                                        robot.setElevatorTarget(490),
+                                        robot.moveRotate(0.5)
+                                ),
+
+//                                new SleepAction(.4),
+
+                                // pick up fourth sample
+                                robot.pickUpSample(),
+
+                                //position to score fourth sample
+                                scoreFourthSample,
+
+                                //score fourth sample
+                                robot.scoreSample(),
+
+                                //reset mechs
+//                                robot.resetMechs(),
                                 robot.servoDown(),
+                                new SleepAction(0.3),
                                 robot.setElevatorTarget(0),
-                                new SleepAction(1),
-                                robot.setLinkageTarget(-200),
-                                new SleepAction(0.5),
+                                new SleepAction(0.25),
+//
+                                //achieve level one ascent
                                 new ParallelAction(
-                                        robot.setLinkageTarget(-550),
-                                        getFirstSample.build()
-
-                                ),
-                                robot.servoGet(),
-                                new SleepAction(0.1),
-                                robot.clawClose(),
-                                new SleepAction(0.1),
-                                robot.servoDown(),
-                                new ParallelAction(
-                                        ScoreFirstSample.build(),
-                                        new SequentialAction(
-                                                robot.setLinkageTarget(-300),
-                                                new SleepAction(0.5),
-                                                robot.setLinkageTarget(100)
-
-                                        )
-                                ),
-                                robot.setElevatorTarget(2500),
-                                new SleepAction(1),
-                                robot.servoUp(),
-                                new SleepAction(1),
-                                robot.clawOpen(),
-                                robot.servoDown(),
-                                robot.setElevatorTarget(0),
-                                new SleepAction(1),
-                                robot.setLinkageTarget(-200),
-                                new SleepAction(0.5),
-                                new ParallelAction(
-                                        robot.setLinkageTarget(-550),
-                                        getSecondSample.build()
-
-                                ),
-                                robot.servoGet(),
-                                new SleepAction(0.1),
-                                robot.clawClose(),
-                                new SleepAction(0.1),
-                                robot.servoDown(),
-                                new ParallelAction(
-                                        ScoreSecondSample.build(),
-                                        new SequentialAction(
-                                                robot.setLinkageTarget(-300),
-                                                new SleepAction(0.5),
-                                                robot.setLinkageTarget(100)
-                                        )
-                                ),
-                                robot.setElevatorTarget(2500),
-                                new SleepAction(1),
-                                robot.servoUp(),
-                                new SleepAction(1),
-                                robot.clawOpen(),
-                                robot.servoDown(),
-                                robot.setElevatorTarget(0),
-                                new SleepAction(1),
-                                robot.setLinkageTarget(-200),
-                                new SleepAction(0.5),
-                                new ParallelAction(
-                                        robot.setLinkageTarget(-550),
-                                        getThirdSample.build()
-
-                                ),
-                                robot.servoGet(),
-                                new SleepAction(0.1),
-                                robot.clawClose(),
-                                new SleepAction(0.1),
-                                robot.servoDown(),
-                                new ParallelAction(
-                                        ScoreThirdSample.build(),
-                                        new SequentialAction(
-                                                robot.setLinkageTarget(-300),
-                                                new SleepAction(0.5),
-                                                robot.setLinkageTarget(100)
-                                        )
+                                        levelOneAscent,
+                                        robot.setLinkageTarget(-75),
+                                        robot.servoAscent()
                                 )
-
-
-
-
 
 
                         )
